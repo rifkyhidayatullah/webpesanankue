@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pesanan Kue Kering</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body{margin:0;font-family:Arial;background:#f7f7f7}
+header{background:#ff8fab;color:#fff;padding:15px;text-align:center;font-size:20px;font-weight:bold}
+.container{padding:15px;max-width:1100px;margin:auto}
+.card{background:#fff;padding:15px;border-radius:12px;margin-bottom:15px;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+input,select,button{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #ddd}
+button{background:#ff8fab;color:#fff;border:none;font-weight:bold;cursor:pointer}
+button.secondary{background:#555}
+button.danger{background:#e74c3c}
+table{width:100%;border-collapse:collapse}
+th,td{padding:6px;border-bottom:1px solid #eee;text-align:center}
+.badge{padding:4px 8px;border-radius:6px;font-size:12px;color:#fff}
+.green{background:#2ecc71}
+.yellow{background:#f1c40f;color:#000}
+.red{background:#e74c3c}
+small.alert{color:#e74c3c;font-weight:bold}
+.filter{display:flex;gap:8px;flex-wrap:wrap}
+.top-nav{display:flex;gap:8px;margin-bottom:10px}
+</style>
+</head>
+
+<body>
+
+<header>📦 Pesanan Kue Kering</header>
+
+<div class="container">
+
+<div class="top-nav">
+  <button onclick="location.href='dashboard.html'">📊 Dashboard</button>
+  <button onclick="location.href='riwayatpesanan.html'">📜 Riwayat Pesanan</button>
+</div>
+
+<div class="card">
+<input type="hidden" id="editId">
+
+<label>Nama Pemesan</label>
+<input id="nama">
+
+<label>Tanggal Pengantaran</label>
+<input type="date" id="tanggalAntar">
+
+<label>Status DP</label>
+<select id="statusDP">
+  <option>Belum DP</option>
+  <option>Sudah DP</option>
+</select>
+
+<label>Status Pembayaran</label>
+<select id="metodeBayar">
+  <option>Belum Bayar</option>
+  <option>Cash</option>
+  <option>Transfer</option>
+  <option>QRIS</option>
+</select>
+
+<label>Tanggal Pembayaran (Bukti)</label>
+<input type="date" id="tanggalBayar">
+
+<label>Jenis Kue</label>
+<select id="jenisKue">
+  <option value="">-- Pilih Jenis Kue--</option>
+  <option>Nastar Keju</option>
+  <option>Nastar Klasik</option>
+  <option>Kastengel</option>
+  <option>Putri Salju</option>
+  <option>Sagu Keju</option>
+  <option>Choco Rocher</option>
+  <option>Thumbprint Choco</option>
+  <option>Mini Cookies</option>
+  <option>Mini Brownie Cup</option>
+  <option>Oreo Button</option>
+</select>
+
+<label>Ukuran Toples</label>
+<select id="ukuranToples">
+  <option value="">-- Pilih Ukuran --</option>
+  <option>500 ml</option>
+  <option>800 ml</option>
+  <option>1000 ml</option>
+</select>
+
+<label>Jumlah</label>
+<input type="number" id="jumlah">
+
+<button onclick="tambahItem()">➕ Tambah ke Keranjang</button>
+<button onclick="simpanTransaksi()">💾 Simpan Transaksi</button>
+</div>
+
+<div class="card">
+<h3>🛒 Keranjang</h3>
+<table>
+<thead><tr><th>Jenis</th><th>Ukuran</th><th>Jumlah</th><th></th></tr></thead>
+<tbody id="keranjang"></tbody>
+</table>
+</div>
+
+<div class="card filter">
+<button class="secondary" onclick="filterBelumBayar()">❌ Belum Bayar</button>
+<button class="secondary" onclick="filterDP('Sudah DP')">💰 Sudah DP</button>
+<button class="secondary" onclick="filterDP('Belum DP')">💸 Belum DP</button>
+<button class="secondary" onclick="filterHariIni()">🚚 Kirim Hari Ini</button>
+<button onclick="loadData()">🔄 Reset</button>
+</div>
+
+<div id="list"></div>
+
+<!-- <div class="card">
+<h3>📊 Dashboard Rekap Pesanan</h3>
+<canvas id="chartPesanan"></canvas>
+</div> -->
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getFirestore, collection, addDoc, getDocs,
+  updateDoc, deleteDoc, doc, serverTimestamp, setDoc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:"AIzaSyCkzEGvVEv-jF-Qg9qGemIAgRSeqQdcThc",
+  authDomain:"pesanankue.firebaseapp.com",
+  projectId:"pesanankue"
+});
+const db = getFirestore(app);
+const colRef = collection(db,"transaksi");
+
+const el=id=>document.getElementById(id);
+let items=[], cache=[], chart;
+
+window.tambahItem=()=>{
+  if(!el("jenisKue").value||!el("jumlah").value||!el("ukuranToples").value)
+    return alert("Lengkapi item");
+  items.push({
+    jenis:el("jenisKue").value,
+    ukuran:el("ukuranToples").value,
+    jumlah:+el("jumlah").value
+  });
+  el("jumlah").value="";
+  renderKeranjang();
+};
+
+function renderKeranjang(){
+  keranjang.innerHTML="";
+  items.forEach((i,idx)=>{
+    keranjang.innerHTML+=`
+    <tr>
+      <td>${i.jenis}</td>
+      <td>${i.ukuran}</td>
+      <td>${i.jumlah}</td>
+      <td><button class="danger" onclick="hapusItem(${idx})">X</button></td>
+    </tr>`;
+  });
+}
+window.hapusItem=i=>{items.splice(i,1);renderKeranjang();};
+
+function diffHari(t){
+  return Math.ceil((new Date(t)-new Date())/86400000);
+}
+function badge(t){
+  const d=diffHari(t);
+  if(d<=1) return ['red','HARI INI'];
+  if(d<=7) return ['yellow','≤ 7 hari'];
+  return ['green','MASIH LAMA'];
+}
+
+window.simpanTransaksi=async()=>{
+  if(!el("nama").value||items.length===0) return alert("Data belum lengkap");
+  const data={
+    nama:el("nama").value,
+    tanggalAntar:el("tanggalAntar").value,
+    statusDP:el("statusDP").value,
+    metodeBayar:el("metodeBayar").value,
+    tanggalBayar:el("tanggalBayar").value||null,
+    items,
+    waktu:serverTimestamp()
+  };
+  el("editId").value
+    ? await updateDoc(doc(db,"transaksi",el("editId").value),data)
+    : await addDoc(colRef,data);
+  resetForm(); loadData();
+};
+function resetForm(){
+  el("editId").value="";
+  items=[]; renderKeranjang();
+}
+
+window.loadData=async()=>{
+  list.innerHTML=""; cache=[];
+  const snap=await getDocs(colRef);
+  snap.forEach(d=>{
+    const t=d.data(); cache.push({id:d.id,...t});
+    const [c,l]=badge(t.tanggalAntar);
+    list.innerHTML+=`
+    <div class="card">
+      <b>${t.nama}</b><br>
+      <span class="badge ${c}">${l}</span>
+      <br>Antar: ${t.tanggalAntar}
+      <br>DP: ${t.statusDP}
+      <br>Bayar: ${t.metodeBayar} ${t.tanggalBayar||''}
+      <br>${t.items.map(i=>`• ${i.jenis} ${i.ukuran} (${i.jumlah})`).join("<br>")}
+      <br>
+      <button onclick="edit('${d.id}')">✏️ Edit</button>
+      <button onclick="selesai('${d.id}')">✅ Selesai</button>
+      <button class="danger" onclick="hapusTransaksi('${d.id}')">🗑 Hapus</button>
+    </div>`;
+  });
+  renderChart();
+};
+
+window.edit=id=>{
+  const t=cache.find(x=>x.id===id);
+  el("editId").value=id;
+  el("nama").value=t.nama;
+  el("tanggalAntar").value=t.tanggalAntar;
+  el("statusDP").value=t.statusDP;
+  el("metodeBayar").value=t.metodeBayar;
+  el("tanggalBayar").value=t.tanggalBayar||"";
+  items=[...t.items]; renderKeranjang();
+};
+
+window.hapusTransaksi=async id=>{
+  if(confirm("Hapus pesanan ini?")){
+    await deleteDoc(doc(db,"transaksi",id));
+    loadData();
+  }
+};
+
+window.selesai = async (id) => {
+  if(!confirm("Tandai pesanan ini sebagai selesai?")) return;
+  const data = cache.find(x => x.id === id);
+  await setDoc(doc(db,"riwayat_pesanan",id), data);
+  await deleteDoc(doc(db,"transaksi",id));
+  loadData();
+};
+
+window.filterBelumBayar=()=>render(cache.filter(x=>x.metodeBayar==="Belum Bayar"));
+window.filterDP=s=>render(cache.filter(x=>x.statusDP===s));
+window.filterHariIni=()=>render(cache.filter(x=>diffHari(x.tanggalAntar)<=1));
+
+function render(data){
+  list.innerHTML="";
+  data.forEach(t=>{
+    const [c,l]=badge(t.tanggalAntar);
+    list.innerHTML+=`
+    <div class="card">
+      <b>${t.nama}</b><br>
+      <span class="badge ${c}">${l}</span><br>
+      Antar: ${t.tanggalAntar}
+    </div>`;
+  });
+}
+
+function renderChart(){
+  const now=new Date();
+  let minggu=0, bulan=0;
+  cache.forEach(t=>{
+    const w=t.waktu?.toDate?.()||new Date();
+    const diff=(now-w)/86400000;
+    if(diff<=7) minggu++;
+    if(diff<=30) bulan++;
+  });
+  if(chart) chart.destroy();
+  chart=new Chart(document.getElementById("chartPesanan"),{
+    type:"bar",
+    data:{
+      labels:["7 Hari","30 Hari"],
+      datasets:[{
+        label:"Jumlah Pesanan",
+        data:[minggu,bulan],
+        backgroundColor:["#f1c40f","#ff8fab"]
+      }]
+    }
+  });
+}
+
+loadData();
+</script>
+
+</body>
+</html>
