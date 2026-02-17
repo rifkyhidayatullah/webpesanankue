@@ -22,13 +22,307 @@ th,td{padding:6px;border-bottom:1px solid #eee;text-align:center}
 .green{background:#2ecc71}
 .yellow{background:#f1c40f;color:#000}
 .red{background:#e74c3c}
-small.alert{color:#e74c3c;font-weight:bold}
 .filter{display:flex;gap:8px;flex-wrap:wrap}
 .top-nav{display:flex;gap:8px;margin-bottom:10px}
+
+#welcomeOverlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:9999;
+transition:opacity 1.2s ease;
+}
+
+/* Galaxy Stars */
+.stars{
+position:absolute;
+width:100%;
+height:100%;
+background:transparent;
+z-index:1;
+}
+
+.star{
+position:absolute;
+width:2px;
+height:2px;
+background:white;
+border-radius:50%;
+animation:blink 2s infinite alternate;
+}
+
+@keyframes blink{
+from{opacity:.3}
+to{opacity:1}
+}
+
+.welcomeBox{
+text-align:center;
+color:white;
+z-index:2;
+animation:fadeZoom 2s ease;
+}
+
+.welcomeBox h1{
+font-size:34px;
+text-shadow:0 0 20px rgba(255,255,255,0.9);
+margin-bottom:10px;
+}
+
+#welcomeOverlay h2{
+font-size:22px;
+color:#ff7eb3;
+text-shadow:
+0 0 10px #ff7eb3,
+0 0 20px #ff7eb3,
+0 0 40px #ff4f87;
+}
+
+#welcomeOverlay p{
+font-size:14px;
+margin-bottom:15px;
+}
+
+#welcomeOverlay button{
+padding:12px 25px;
+border:none;
+border-radius:30px;
+background:white;
+color:#ff4f87;
+font-weight:bold;
+cursor:pointer;
+transition:.3s;
+}
+
+#welcomeOverlay button:hover{
+transform:scale(1.15);
+}
+
+#herPhoto{
+width:130px;
+height:130px;
+border-radius:50%;
+object-fit:cover;
+margin:20px auto;
+opacity:0;
+transform:scale(.8);
+transition:all 1.5s ease;
+position:relative;
+z-index:2;
+}
+
+#herPhoto::after{
+content:"";
+position:absolute;
+top:-10px;
+left:-10px;
+width:150px;
+height:150px;
+border-radius:50%;
+border:3px solid #ff4f87;
+animation:rotateRing 6s linear infinite;
+}
+
+@keyframes rotateRing{
+from{transform:rotate(0deg)}
+to{transform:rotate(360deg)}
+}
+
+
+@keyframes fadeZoom{
+0%{opacity:0;transform:scale(.7)}
+100%{opacity:1;transform:scale(1)}
+}
+
+/* Floating Hearts */
+.floating-hearts span{
+position:absolute;
+bottom:-50px;
+font-size:20px;
+animation:floatUp 6s linear infinite;
+opacity:0.8;
+}
+
+@keyframes floatUp{
+0%{transform:translateY(0) scale(1)}
+100%{transform:translateY(-110vh) scale(1.5)}
+}
+
+#confettiCanvas{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+pointer-events:none;
+}
+.music-hint{
+  margin-top:20px;
+  font-size:14px;
+  opacity:0;
+  color:#fff;
+  text-align:center;
+  animation: fadeInHint 3s ease forwards;
+  animation-delay: 2s;
+}
+
+@keyframes fadeInHint{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
+#galaxyCanvas,
+#effectsCanvas{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:0;
+}
+
+
+/* Nebula glow */
+.nebula{
+  position:fixed;
+  width:600px;
+  height:600px;
+  border-radius:50%;
+  filter:blur(120px);
+  opacity:0.6;
+  z-index:0;
+  animation: nebulaMove 30s linear infinite alternate;
+}
+
+.nebula1{
+  background:radial-gradient(circle,#ff4da6,#8000ff,transparent);
+  top:10%;
+  left:20%;
+}
+
+.nebula2{
+  background:radial-gradient(circle,#cc00ff,#ff66cc,transparent);
+  bottom:10%;
+  right:20%;
+}
+
+@keyframes nebulaMove{
+  from{ transform:translate(0,0); }
+  to{ transform:translate(50px,-50px); }
+}
+#rocket{
+  position: fixed;
+  font-size: 50px;
+  left: -100px;
+  top: 70%;
+  transform: rotate(20deg);
+  z-index: 1000;
+  filter: drop-shadow(0 0 15px orange);
+  animation: rocketFly 12s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rocketFly{
+  0%{
+    left:-150px;
+    top:70%;
+    transform: rotate(20deg);
+  }
+  50%{
+    top:40%;
+  }
+  100%{
+    left:110vw;
+    top:20%;
+    transform: rotate(25deg);
+  }
+}
+.rocket-text{
+  position: fixed;
+  bottom: 10%;
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-size: 18px;
+  text-shadow: 0 0 10px pink;
+  animation: fadeIn 1s ease;
+  z-index: 999;
+}
+.rocket-fly{
+  position: fixed;
+  font-size: 45px;
+  left: -100px;
+  animation: rocketMove 10s linear forwards;
+  z-index: 1000;
+}
+
+@keyframes rocketMove{
+  0%{ left:-150px; top:60vh;}
+  100%{ left:110vw; top:20vh;}
+}
+
+.buzz-fly{
+  position: fixed;
+  font-size: 50px;
+  left: -120px;
+  top:75vh;
+  filter: drop-shadow(0 0 15px cyan);
+  animation: buzzMove 10s linear forwards;
+  z-index: 999;
+}
+
+@keyframes buzzMove{
+  0%{ left:-120px; top:75vh;}
+  100%{ left:110vw; top:25vh;}
+}
+.buzz-fly::after{
+  content:"✨✨";
+  position:absolute;
+  font-size:20px;
+  left:-25px;
+  top:10px;
+}
+
 </style>
 </head>
 
 <body>
+ <div id="welcomeOverlay">
+  <canvas id="galaxyCanvas"></canvas>
+  <canvas id="effectsCanvas"></canvas>
+  <div class="nebula nebula1"></div>
+<div class="nebula nebula2"></div>
+<div id="rocket">🚀</div>
+  <p id="musicHint" class="music-hint">
+  💕 Tekan layar mana aja el biar ada musik nya, dengerin sampe selesai ya 🥰
+</p>
+
+  <div class="stars"></div>
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="floating-hearts"></div>
+
+  <div class="welcomeBox">
+    <h1 id="typingText"></h1>
+    <h2 id="herName">Untuk: Sayangkuuuu 💕</h2>
+    <p id="dayCounter"></p>
+    <img src="baeksongmin.jpg" id="herPhoto">
+    <button id="loveBtn">Klik kalau kamu sayang aku 💖</button>
+  </div>
+
+  <audio id="bgMusic" loop>
+  <source src="kasihputih.mp3" type="audio/mpeg">
+</audio>
+
+</div>
+
 
 <header>📦 Pesanan Kue Kering</header>
 
@@ -37,6 +331,8 @@ small.alert{color:#e74c3c;font-weight:bold}
 <div class="top-nav">
   <button onclick="location.href='dashboard.html'">📊 Dashboard</button>
   <button onclick="location.href='riwayatpesanan.html'">📜 Riwayat Pesanan</button>
+  <button onclick="location.href='custompesanan.html'">✨ Custom Pesanan</button>
+
 </div>
 
 <div class="card">
@@ -49,10 +345,15 @@ small.alert{color:#e74c3c;font-weight:bold}
 <input type="date" id="tanggalAntar">
 
 <label>Status DP</label>
-<select id="statusDP">
+<select id="statusDP" onchange="toggleDP()">
   <option>Belum DP</option>
   <option>Sudah DP</option>
 </select>
+
+<div id="dpNominalBox" style="display:none;">
+  <label>Nominal DP (Rp)</label>
+  <input type="number" id="nominalDP">
+</div>
 
 <label>Status Pembayaran</label>
 <select id="metodeBayar">
@@ -67,25 +368,25 @@ small.alert{color:#e74c3c;font-weight:bold}
 
 <label>Jenis Kue</label>
 <select id="jenisKue">
-  <option value="">-- Pilih Jenis Kue--</option>
-  <option>Nastar Keju</option>
-  <option>Nastar Klasik</option>
-  <option>Kastengel</option>
-  <option>Putri Salju</option>
-  <option>Sagu Keju</option>
-  <option>Choco Rocher</option>
-  <option>Thumbprint Choco</option>
-  <option>Mini Cookies</option>
-  <option>Mini Brownie Cup</option>
-  <option>Oreo Button</option>
+<option value="">-- Pilih Jenis Kue--</option>
+<option>Nastar Keju</option>
+<option>Nastar Klasik</option>
+<option>Kastengel</option>
+<option>Putri Salju</option>
+<option>Sagu Keju</option>
+<option>Choco Rocher</option>
+<option>Thumbprint Choco</option>
+<option>Mini Cookies</option>
+<option>Mini Brownie Cup</option>
+<option>Oreo Button</option>
 </select>
 
 <label>Ukuran Toples</label>
 <select id="ukuranToples">
-  <option value="">-- Pilih Ukuran --</option>
-  <option>500 ml</option>
-  <option>800 ml</option>
-  <option>1000 ml</option>
+<option value="">-- Pilih Ukuran --</option>
+<option>500 ml</option>
+<option>800 ml</option>
+<option>1000 ml</option>
 </select>
 
 <label>Jumlah</label>
@@ -95,196 +396,545 @@ small.alert{color:#e74c3c;font-weight:bold}
 <button onclick="simpanTransaksi()">💾 Simpan Transaksi</button>
 </div>
 
+<!-- KERANJANG -->
 <div class="card">
 <h3>🛒 Keranjang</h3>
 <table>
-<thead><tr><th>Jenis</th><th>Ukuran</th><th>Jumlah</th><th></th></tr></thead>
+<thead>
+<tr><th>Jenis</th><th>Ukuran</th><th>Jumlah</th><th></th></tr>
+</thead>
 <tbody id="keranjang"></tbody>
 </table>
 </div>
 
-<div class="card filter">
-<button class="secondary" onclick="filterBelumBayar()">❌ Belum Bayar</button>
-<button class="secondary" onclick="filterDP('Sudah DP')">💰 Sudah DP</button>
-<button class="secondary" onclick="filterDP('Belum DP')">💸 Belum DP</button>
-<button class="secondary" onclick="filterHariIni()">🚚 Kirim Hari Ini</button>
-<button onclick="loadData()">🔄 Reset</button>
-</div>
-
 <div id="list"></div>
-
-<!-- <div class="card">
-<h3>📊 Dashboard Rekap Pesanan</h3>
-<canvas id="chartPesanan"></canvas>
-</div> -->
 
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
-  getFirestore, collection, addDoc, getDocs,
-  updateDoc, deleteDoc, doc, serverTimestamp, setDoc
+getFirestore, collection, addDoc, getDocs,
+updateDoc, deleteDoc, doc, serverTimestamp, setDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const app = initializeApp({
-  apiKey:"AIzaSyCkzEGvVEv-jF-Qg9qGemIAgRSeqQdcThc",
-  authDomain:"pesanankue.firebaseapp.com",
-  projectId:"pesanankue"
+const text = "Selamat datang sayangku yang paling cantik di galaksi ini 💖🌌";
+let i = 0;
+const typing = document.getElementById("typingText");
+
+function typeEffect(){
+  if(i < text.length){
+    typing.innerHTML += text.charAt(i);
+    i++;
+    setTimeout(typeEffect, 60);
+  }
+}
+window.onload = function(){
+
+  if(!sessionStorage.getItem("introShown")){
+    typeEffect();
+  } else {
+    document.getElementById("welcomeOverlay").style.display = "none";
+  }
+
+};
+function launchRocketAndBuzz(){
+
+  // 🚀 ROKET
+  const rocket = document.createElement("div");
+  rocket.innerHTML = "🚀";
+  rocket.className = "rocket-fly";
+  rocket.style.top = "60vh";
+  document.body.appendChild(rocket);
+
+  // 🧑‍🚀 BUZZ (emoji astronaut jadi style buzz)
+  const buzz = document.createElement("div");
+  buzz.innerHTML = "🧑‍🚀";
+  buzz.className = "buzz-fly";
+  document.body.appendChild(buzz);
+
+  setTimeout(()=>{
+    rocket.remove();
+    buzz.remove();
+  },10000);
+}
+
+setInterval(launchRocketAndBuzz, 20000);
+
+function launchRocket(){
+  const text = document.createElement("div");
+text.className = "rocket-text";
+text.innerHTML = "Terbang setinggi apapun… tetap pulangnya ke kamu 💖";
+document.body.appendChild(text);
+
+setTimeout(()=>text.remove(),4000);
+
+}
+
+setInterval(launchRocket, 20000);
+
+
+/* COUNTER HARI JADIAN */
+const startDate = new Date("2022-06-01"); // GANTI TANGGAL JADIAN
+const today = new Date();
+const diffTime = today - startDate;
+const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+document.getElementById("dayCounter").innerText =
+"A Relationship that lasted " + diffDays + " days 💕";
+
+/* Floating hearts */
+const heartsContainer = document.querySelector(".floating-hearts");
+function createHeart(){
+  const heart = document.createElement("span");
+  heart.innerHTML = "💖";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.animationDuration = (4 + Math.random()*3) + "s";
+  heart.style.fontSize = (15 + Math.random()*20) + "px";
+  heartsContainer.appendChild(heart);
+  setTimeout(()=>heart.remove(),6000);
+}
+setInterval(createHeart,500);
+
+// supaya browser izinkan play
+
+
+
+/* Confetti */
+const canvas = document.getElementById("confettiCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let confetti = [];
+function createConfetti(){
+  for(let i=0;i<150;i++){
+    confetti.push({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height,
+      r:Math.random()*6+2,
+      d:Math.random()*10
+    });
+  }
+}
+
+function drawConfetti(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="white";
+  confetti.forEach(c=>{
+    ctx.beginPath();
+    ctx.arc(c.x,c.y,c.r,0,Math.PI*2);
+    ctx.fill();
+    c.y+=2;
+    if(c.y>canvas.height) c.y=0;
+  });
+}
+
+function animateConfetti(){
+  drawConfetti();
+  requestAnimationFrame(animateConfetti);
+}
+
+/* BUTTON CLICK */
+document.getElementById("loveBtn").onclick = function(){
+
+  sessionStorage.setItem("introShown", "true");
+
+  // PLAY dulu
+  music.play();
+
+  document.getElementById("herPhoto").style.opacity="1";
+  document.getElementById("herPhoto").style.transform="scale(1)";
+
+  createConfetti();
+  animateConfetti();
+
+  // lalu fade out musik
+  let fade = setInterval(()=>{
+    if(music.volume > 0.05){
+      music.volume -= 0.05;
+    } else {
+      music.pause();
+      music.currentTime = 0;
+      music.volume = 1;
+      clearInterval(fade);
+    }
+  },100);
+
+  setTimeout(()=>{
+    document.getElementById("welcomeOverlay").style.opacity="0";
+    setTimeout(()=>{
+      document.getElementById("welcomeOverlay").style.display="none";
+    },1200);
+  },4000);
+};
+
+
+/* Generate Stars */
+const starsContainer = document.querySelector(".stars");
+
+function createStars(){
+  for(let i=0;i<200;i++){
+    const star = document.createElement("div");
+    star.classList.add("star");
+    star.style.top = Math.random()*100 + "vh";
+    star.style.left = Math.random()*100 + "vw";
+    star.style.animationDuration = (1 + Math.random()*2) + "s";
+    starsContainer.appendChild(star);
+  }
+}
+createStars();
+document.addEventListener("mousemove",function(e){
+  const x = (window.innerWidth/2 - e.pageX)/50;
+  const y = (window.innerHeight/2 - e.pageY)/50;
+  starsContainer.style.transform = `translate(${x}px, ${y}px)`;
 });
+
+
+const app = initializeApp({
+apiKey:"AIzaSyCkzEGvVEv-jF-Qg9qGemIAgRSeqQdcThc",
+authDomain:"pesanankue.firebaseapp.com",
+projectId:"pesanankue"
+});
+
 const db = getFirestore(app);
 const colRef = collection(db,"transaksi");
 
 const el=id=>document.getElementById(id);
-let items=[], cache=[], chart;
+let items=[], cache=[];
+
+window.toggleDP=()=>{
+dpNominalBox.style.display =
+el("statusDP").value==="Sudah DP"?"block":"none";
+};
 
 window.tambahItem=()=>{
-  if(!el("jenisKue").value||!el("jumlah").value||!el("ukuranToples").value)
-    return alert("Lengkapi item");
-  items.push({
-    jenis:el("jenisKue").value,
-    ukuran:el("ukuranToples").value,
-    jumlah:+el("jumlah").value
-  });
-  el("jumlah").value="";
-  renderKeranjang();
+if(!el("jenisKue").value||!el("jumlah").value||!el("ukuranToples").value)
+return alert("Lengkapi item");
+
+items.push({
+jenis:el("jenisKue").value,
+ukuran:el("ukuranToples").value,
+jumlah:+el("jumlah").value
+});
+el("jumlah").value="";
+renderKeranjang();
 };
 
 function renderKeranjang(){
-  keranjang.innerHTML="";
-  items.forEach((i,idx)=>{
-    keranjang.innerHTML+=`
-    <tr>
-      <td>${i.jenis}</td>
-      <td>${i.ukuran}</td>
-      <td>${i.jumlah}</td>
-      <td><button class="danger" onclick="hapusItem(${idx})">X</button></td>
-    </tr>`;
-  });
+keranjang.innerHTML="";
+items.forEach((i,idx)=>{
+keranjang.innerHTML+=`
+<tr>
+<td>${i.jenis}</td>
+<td>${i.ukuran}</td>
+<td>${i.jumlah}</td>
+<td><button class="danger" onclick="hapusItem(${idx})">X</button></td>
+</tr>`;
+});
 }
-window.hapusItem=i=>{items.splice(i,1);renderKeranjang();};
+
+window.hapusItem=i=>{
+items.splice(i,1);
+renderKeranjang();
+};
 
 function diffHari(t){
-  return Math.ceil((new Date(t)-new Date())/86400000);
+return Math.ceil((new Date(t)-new Date())/86400000);
 }
+
 function badge(t){
-  const d=diffHari(t);
-  if(d<=1) return ['red','HARI INI'];
-  if(d<=7) return ['yellow','≤ 7 hari'];
-  return ['green','MASIH LAMA'];
+const d=diffHari(t);
+if(d<=1) return ['red','HARI INI'];
+if(d<=7) return ['yellow','≤ 7 hari'];
+return ['green','MASIH LAMA'];
 }
 
 window.simpanTransaksi=async()=>{
-  if(!el("nama").value||items.length===0) return alert("Data belum lengkap");
-  const data={
-    nama:el("nama").value,
-    tanggalAntar:el("tanggalAntar").value,
-    statusDP:el("statusDP").value,
-    metodeBayar:el("metodeBayar").value,
-    tanggalBayar:el("tanggalBayar").value||null,
-    items,
-    waktu:serverTimestamp()
-  };
-  el("editId").value
-    ? await updateDoc(doc(db,"transaksi",el("editId").value),data)
-    : await addDoc(colRef,data);
-  resetForm(); loadData();
+if(!el("nama").value||items.length===0)
+return alert("Data belum lengkap");
+
+const data={
+nama:el("nama").value,
+tanggalAntar:el("tanggalAntar").value,
+statusDP:el("statusDP").value,
+nominalDP: el("statusDP").value==="Sudah DP"
+? +el("nominalDP").value||0
+: 0,
+metodeBayar:el("metodeBayar").value,
+tanggalBayar:el("tanggalBayar").value||null,
+items,
+waktu:serverTimestamp()
 };
+
+el("editId").value
+? await updateDoc(doc(db,"transaksi",el("editId").value),data)
+: await addDoc(colRef,data);
+
+resetForm();
+loadData();
+};
+
 function resetForm(){
-  el("editId").value="";
-  items=[]; renderKeranjang();
+el("editId").value="";
+items=[];
+renderKeranjang();
+el("nominalDP").value="";
 }
 
 window.loadData=async()=>{
-  list.innerHTML=""; cache=[];
-  const snap=await getDocs(colRef);
-  snap.forEach(d=>{
-    const t=d.data(); cache.push({id:d.id,...t});
-    const [c,l]=badge(t.tanggalAntar);
-    list.innerHTML+=`
-    <div class="card">
-      <b>${t.nama}</b><br>
-      <span class="badge ${c}">${l}</span>
-      <br>Antar: ${t.tanggalAntar}
-      <br>DP: ${t.statusDP}
-      <br>Bayar: ${t.metodeBayar} ${t.tanggalBayar||''}
-      <br>${t.items.map(i=>`• ${i.jenis} ${i.ukuran} (${i.jumlah})`).join("<br>")}
-      <br>
-      <button onclick="edit('${d.id}')">✏️ Edit</button>
-      <button onclick="selesai('${d.id}')">✅ Selesai</button>
-      <button class="danger" onclick="hapusTransaksi('${d.id}')">🗑 Hapus</button>
-    </div>`;
-  });
-  renderChart();
+list.innerHTML="";
+cache=[];
+const snap=await getDocs(colRef);
+
+snap.forEach(d=>{
+const t=d.data();
+cache.push({id:d.id,...t});
+const [c,l]=badge(t.tanggalAntar);
+
+list.innerHTML+=`
+<div class="card">
+<b>${t.nama}</b><br>
+<span class="badge ${c}">${l}</span><br>
+Antar: ${t.tanggalAntar}<br>
+DP: ${t.statusDP} ${t.nominalDP?'- Rp '+t.nominalDP.toLocaleString():''}<br>
+Bayar: ${t.metodeBayar}<br>
+${t.items.map(i=>`• ${i.jenis} ${i.ukuran} (${i.jumlah})`).join("<br>")}
+<br><br>
+<button onclick="edit('${d.id}')">✏️ Edit</button>
+<button class="danger" onclick="hapusTransaksi('${d.id}')">🗑 Hapus</button>
+<button onclick="selesai('${d.id}')">✅ Selesai</button>
+</div>`;
+});
 };
 
 window.edit=id=>{
-  const t=cache.find(x=>x.id===id);
-  el("editId").value=id;
-  el("nama").value=t.nama;
-  el("tanggalAntar").value=t.tanggalAntar;
-  el("statusDP").value=t.statusDP;
-  el("metodeBayar").value=t.metodeBayar;
-  el("tanggalBayar").value=t.tanggalBayar||"";
-  items=[...t.items]; renderKeranjang();
+const t=cache.find(x=>x.id===id);
+el("editId").value=id;
+el("nama").value=t.nama;
+el("tanggalAntar").value=t.tanggalAntar;
+el("statusDP").value=t.statusDP;
+toggleDP();
+el("nominalDP").value=t.nominalDP||"";
+el("metodeBayar").value=t.metodeBayar;
+el("tanggalBayar").value=t.tanggalBayar||"";
+items=[...t.items];
+renderKeranjang();
 };
 
 window.hapusTransaksi=async id=>{
-  if(confirm("Hapus pesanan ini?")){
-    await deleteDoc(doc(db,"transaksi",id));
-    loadData();
-  }
+if(confirm("Hapus pesanan ini?")){
+await deleteDoc(doc(db,"transaksi",id));
+loadData();
+}
 };
 
-window.selesai = async (id) => {
-  if(!confirm("Tandai pesanan ini sebagai selesai?")) return;
-  const data = cache.find(x => x.id === id);
-  await setDoc(doc(db,"riwayat_pesanan",id), data);
-  await deleteDoc(doc(db,"transaksi",id));
-  loadData();
+window.selesai=async id=>{
+if(!confirm("Tandai selesai?")) return;
+const data=cache.find(x=>x.id===id);
+await setDoc(doc(db,"riwayat_pesanan",id),data);
+await deleteDoc(doc(db,"transaksi",id));
+loadData();
 };
-
-window.filterBelumBayar=()=>render(cache.filter(x=>x.metodeBayar==="Belum Bayar"));
-window.filterDP=s=>render(cache.filter(x=>x.statusDP===s));
-window.filterHariIni=()=>render(cache.filter(x=>diffHari(x.tanggalAntar)<=1));
-
-function render(data){
-  list.innerHTML="";
-  data.forEach(t=>{
-    const [c,l]=badge(t.tanggalAntar);
-    list.innerHTML+=`
-    <div class="card">
-      <b>${t.nama}</b><br>
-      <span class="badge ${c}">${l}</span><br>
-      Antar: ${t.tanggalAntar}
-    </div>`;
-  });
-}
-
-function renderChart(){
-  const now=new Date();
-  let minggu=0, bulan=0;
-  cache.forEach(t=>{
-    const w=t.waktu?.toDate?.()||new Date();
-    const diff=(now-w)/86400000;
-    if(diff<=7) minggu++;
-    if(diff<=30) bulan++;
-  });
-  if(chart) chart.destroy();
-  chart=new Chart(document.getElementById("chartPesanan"),{
-    type:"bar",
-    data:{
-      labels:["7 Hari","30 Hari"],
-      datasets:[{
-        label:"Jumlah Pesanan",
-        data:[minggu,bulan],
-        backgroundColor:["#f1c40f","#ff8fab"]
-      }]
-    }
-  });
-}
 
 loadData();
+
+const galaxyCanvas = document.getElementById("galaxyCanvas");
+const gctx = galaxyCanvas.getContext("2d");
+
+galaxyCanvas.width = window.innerWidth;
+galaxyCanvas.height = window.innerHeight;
+
+let stars = [];
+const STAR_COUNT = 800;
+const arms = 4;
+const rotationSpeed = 0.0008;
+let angleOffset = 0;
+
+function createGalaxy(){
+  stars = [];
+  for(let i=0;i<STAR_COUNT;i++){
+
+    const arm = Math.floor(Math.random() * arms);
+    const armAngle = (arm / arms) * Math.PI * 2;
+
+    const distance = Math.random() * 400;
+    const spread = 0.5;
+
+    const angle = armAngle + distance * 0.05 + (Math.random()-0.5)*spread;
+
+    const x = galaxyCanvas.width/2 + Math.cos(angle) * distance;
+    const y = galaxyCanvas.height/2 + Math.sin(angle) * distance;
+
+    stars.push({
+      x,y,
+      size:Math.random()*2,
+      opacity:Math.random()
+    });
+  }
+}
+
+
+const music = document.getElementById("bgMusic");
+
+document.body.addEventListener("click", () => {
+  if(music.paused){
+    music.play();
+  }
+}, { once: true });
+  let pulseAngle = 0;
+
+function drawGalaxy(){
+  let pulse = 1 + Math.sin(pulseAngle) * 0.05;
+pulseAngle += 0.02;
+
+  gctx.fillStyle = "rgba(0,0,20,0.6)";
+  gctx.fillRect(0,0,galaxyCanvas.width,galaxyCanvas.height);
+
+  gctx.save();
+  gctx.translate(galaxyCanvas.width/2, galaxyCanvas.height/2);
+  gctx.rotate(angleOffset);
+  gctx.scale(pulse, pulse);
+  gctx.translate(-galaxyCanvas.width/2, -galaxyCanvas.height/2);
+
+  stars.forEach(star=>{
+    gctx.beginPath();
+    gctx.arc(star.x, star.y, star.size, 0, Math.PI*2);
+    gctx.fillStyle = `rgba(255,255,255,${star.opacity})`;
+    gctx.fill();
+  });
+  gctx.fillStyle = "white";
+gctx.font = "40px Arial";
+gctx.textAlign = "center";
+gctx.fillText("MY LOVELY SI ELL 💖", galaxyCanvas.width/2, galaxyCanvas.height/2);
+
+  gctx.restore();
+
+  angleOffset += rotationSpeed;
+
+  requestAnimationFrame(drawGalaxy);
+}
+
+createGalaxy();
+drawGalaxy();
+
+let hue = 280;
+
+function animateNebula(){
+  hue += 0.2;
+  document.querySelectorAll(".nebula").forEach(n=>{
+    n.style.background =
+      `radial-gradient(circle,
+        hsl(${hue},100%,70%),
+        hsl(${hue+40},100%,40%),
+        transparent)`;
+  });
+  requestAnimationFrame(animateNebula);
+}
+animateNebula();
+
+/* PARALLAX EFFECT */
+document.addEventListener("mousemove",function(e){
+  const x = (window.innerWidth/2 - e.pageX)/100;
+  const y = (window.innerHeight/2 - e.pageY)/100;
+  galaxyCanvas.style.transform = `translate(${x}px, ${y}px)`;
+});
+
+window.addEventListener("resize",()=>{
+  galaxyCanvas.width = window.innerWidth;
+  galaxyCanvas.height = window.innerHeight;
+  createGalaxy();
+});
+const effectsCanvas = document.getElementById("effectsCanvas");
+const ectx = effectsCanvas.getContext("2d");
+
+effectsCanvas.width = window.innerWidth;
+effectsCanvas.height = window.innerHeight;
+
+/* SHOOTING STAR */
+let shootingStars = [];
+
+function createShootingStar(){
+  shootingStars.push({
+    x: Math.random()*effectsCanvas.width,
+    y: 0,
+    length: 200,
+    speed: 8,
+    angle: Math.PI/4
+  });
+}
+
+setInterval(createShootingStar, 5000);
+
+function drawEffects(){
+  ectx.clearRect(0,0,effectsCanvas.width,effectsCanvas.height);
+
+  shootingStars.forEach((star,index)=>{
+    ectx.beginPath();
+    ectx.moveTo(star.x, star.y);
+    ectx.lineTo(
+      star.x - Math.cos(star.angle)*star.length,
+      star.y - Math.sin(star.angle)*star.length
+    );
+    ectx.strokeStyle="white";
+    ectx.lineWidth=2;
+    ectx.stroke();
+
+    star.x += star.speed;
+    star.y += star.speed;
+
+    if(star.y > effectsCanvas.height){
+      shootingStars.splice(index,1);
+    }
+  });
+
+  requestAnimationFrame(drawEffects);
+}
+
+drawEffects();
+
+/* PLANET BESAR LEWAT */
+let planetX = -300;
+let planetY = effectsCanvas.height * 0.3;
+
+function drawPlanet(){
+
+  ectx.save();
+  ectx.translate(planetX, planetY);
+
+  // planet
+  const grad = ectx.createRadialGradient(-30,-30,20,0,0,120);
+  grad.addColorStop(0,"#ffccff");
+  grad.addColorStop(1,"#8000ff");
+  ectx.fillStyle = grad;
+  ectx.beginPath();
+  ectx.arc(0,0,120,0,Math.PI*2);
+  ectx.fill();
+
+  // ring
+  ectx.rotate(0.5);
+  ectx.strokeStyle="rgba(255,255,255,0.6)";
+  ectx.lineWidth=8;
+  ectx.beginPath();
+  ectx.ellipse(0,0,180,50,0,0,Math.PI*2);
+  ectx.stroke();
+
+  ectx.restore();
+
+  planetX += 0.3;
+  if(planetX > effectsCanvas.width + 300){
+    planetX = -300;
+  }
+
+  requestAnimationFrame(drawPlanet);
+}
+
+drawPlanet();
+
+window.addEventListener("resize",()=>{
+  effectsCanvas.width = window.innerWidth;
+  effectsCanvas.height = window.innerHeight;
+});
+
 </script>
 
 </body>
