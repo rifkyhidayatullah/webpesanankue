@@ -9,12 +9,115 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <style>
-body{margin:0;font-family:Arial;background:#f7f7f7}
-header{background:#ff8fab;color:#fff;padding:15px;text-align:center;font-size:20px;font-weight:bold}
-.container{padding:15px;max-width:1000px;margin:auto}
-.card{background:#fff;padding:15px;border-radius:12px;margin-bottom:15px;box-shadow:0 2px 6px rgba(0,0,0,.1)}
-button{width:100%;padding:10px;border-radius:8px;border:none;background:#ff8fab;color:#fff;font-weight:bold}
-input{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd}
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(135deg,#fdfbfb,#ebedee);
+}
+
+header{
+background:#5b0043;
+color:#fff;
+padding:20px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+letter-spacing:1px;
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:#fff;
+padding:20px;
+border-radius:18px;
+box-shadow:0 8px 25px rgba(0,0,0,.08);
+margin-bottom:25px;
+}
+
+h3{
+margin-top:0;
+font-weight:600;
+}
+
+button{
+background:#ff48cf;
+color:#fff;
+border:none;
+padding:10px 16px;
+border-radius:10px;
+cursor:pointer;
+font-weight:bold;
+margin:5px 5px 10px 0;
+}
+
+button:hover{
+opacity:.85;
+}
+
+select{
+padding:8px 12px;
+border-radius:10px;
+border:1px solid #ddd;
+margin-right:10px;
+}
+
+.table-wrapper{
+overflow-x:auto;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+min-width:1000px;
+}
+
+th,td{
+padding:12px;
+border-bottom:1px solid #eee;
+text-align:center;
+}
+
+th{
+background:#fafafa;
+font-weight:600;
+}
+
+.badge-lunas{
+color:#2ecc71;
+font-weight:bold;
+}
+
+.badge-kurang{
+color:#e74c3c;
+font-weight:bold;
+}
+
+@media(max-width:768px){
+table{min-width:850px}
+.card{padding:15px}
+}
+.summary-box{
+background:#ff85df;
+color:white;
+padding:15px;
+border-radius:14px;
+text-align:center;
+font-weight:bold;
+}
+
+.jenis-box{
+background:#dcffd1;
+padding:12px;
+border-radius:12px;
+text-align:center;
+font-size:14px;
+}
+
 </style>
 </head>
 
@@ -24,75 +127,298 @@ input{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd}
 
 <div class="container">
 
-<button onclick="location.href='index.html'">⬅ Kembali ke Transaksi</button>
+<button onclick="location.href='index.html'">⬅ Kembali</button>
+<button onclick="exportExcel()">📥 Export Excel</button>
 
+<!-- GRAFIK -->
 <div class="card">
-<h3>Diagram Penjualan per Jenis Kue</h3>
+<h3>Grafik Penjualan per Jenis</h3>
 <canvas id="chartJenis"></canvas>
 </div>
 
 <div class="card">
-<h3>Export Laporan Bulanan (Excel)</h3>
-<input type="month" id="bulan">
-<button onclick="exportExcel()">Download Excel</button>
+<h3>Grafik Penjualan per Ukuran</h3>
+<canvas id="chartUkuran"></canvas>
+</div>
+<!-- TAMBAHKAN BAGIAN INI DI BAWAH GRAFIK -->
+
+<div class="card">
+<h3>📊 Ringkasan Penjualan</h3>
+
+<div id="summaryGlobal" style="
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px;
+margin-bottom:20px;"></div>
+
+<h4>Total Per Jenis</h4>
+<div id="summaryJenis" style="
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:12px;"></div>
+
+</div>
+
+<!-- FILTER + TABEL -->
+<div class="card">
+<h3>🔎 Klasifikasi Pesanan</h3>
+
+<select id="filterUkuran" onchange="renderTable()">
+<option value="">Semua Ukuran</option>
+<option value="500 ml">500 ml</option>
+<option value="800 ml">800 ml</option>
+<option value="1000 ml">1000 ml</option>
+</select>
+
+<select id="filterJenis" onchange="renderTable()">
+<option value="">Semua Jenis</option>
+<option>Nastar Keju</option>
+<option>Nastar Klasik</option>
+<option>Sagu Keju</option>
+<option>Kastengel</option>
+<option>Choco Rocher</option>
+<option>Oreo Button</option>
+<option>Thumbprint Choco</option>
+<option>Mini Cookies</option>
+<option>Mini Brownie Cup</option>
+<option>Putri Salju</option>
+</select>
+
+<div class="table-wrapper">
+<table id="tabelData">
+<thead>
+<tr>
+<th>Nama</th>
+<th>Jenis</th>
+<th>Ukuran</th>
+<th>Jumlah</th>
+<th>Harga Satuan</th>
+<th>Total</th>
+<th>DP</th>
+<th>Sisa</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="tabelKlasifikasi"></tbody>
+</table>
+</div>
+
 </div>
 
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import {
-getFirestore, collection, getDocs
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const app = initializeApp({
-apiKey:"AIzaSyCkzEGvVEv-jF-Qg9qGemIAgRSeqQdcThc",
-authDomain:"pesanankue.firebaseapp.com",
-projectId:"pesanankue"
+  apiKey: "AIzaSyCkzEGvVEv-jF-Qg9qGemIAgRSeqQdcThc",
+  authDomain: "pesanankue.firebaseapp.com",
+  projectId: "pesanankue"
 });
 
-const db=getFirestore(app);
-const colRef=collection(db,"transaksi");
-let cache=[], chart;
+const db = getFirestore(app);
+const colRef = collection(db, "transaksi");
 
-async function loadData(){
-const snap=await getDocs(colRef);
-snap.forEach(d=>cache.push(d.data()));
-renderChart();
+let cache = [];
+let chartJenis, chartUkuran;
+
+/* ================= HARGA SESUAI PRICE LIST ================= */
+
+const harga = {
+  "500 ml": {
+    "Nastar Keju": 60000,
+    "Nastar Klasik": 60000,
+    "Sagu Keju": 55000,
+    "Kastengel": 55000,
+    "Choco Rocher": 60000,
+    "Oreo Button": 55000,
+    "Thumbprint Choco": 50000,
+    "Mini Cookies": 45000,
+    "Mini Brownie Cup": 45000,
+    "Putri Salju": 45000
+  },
+  "800 ml": {
+    "Nastar Keju": 75000,
+    "Nastar Klasik": 75000,
+    "Sagu Keju": 70000,
+    "Kastengel": 75000,
+    "Choco Rocher": 80000,
+    "Oreo Button": 75000,
+    "Thumbprint Choco": 60000,
+    "Mini Cookies": 55000,
+    "Mini Brownie Cup": 55000,
+    "Putri Salju": 55000
+  },
+  "1000 ml": {
+    "Nastar Keju": 95000,
+    "Nastar Klasik": 95000,
+    "Sagu Keju": 85000,
+    "Kastengel": 90000,
+    "Choco Rocher": 98000,
+    "Oreo Button": 98000,
+    "Thumbprint Choco": 90000,
+    "Mini Cookies": 75000,
+    "Mini Brownie Cup": 80000,
+    "Putri Salju": 90000
+  }
+};
+
+/* ================= LOAD DATA ================= */
+
+async function loadData() {
+  const snap = await getDocs(colRef);
+  cache = [];
+  snap.forEach(doc => cache.push(doc.data()));
+  renderCharts();
+  renderTable();
+  renderSummary();
 }
 loadData();
 
-function renderChart(){
-let total={};
-cache.forEach(t=>{
-t.items.forEach(i=>{
-total[i.jenis]=(total[i.jenis]||0)+i.jumlah;
-});
-});
-chart=new Chart(document.getElementById("chartJenis"),{
-type:"pie",
-data:{
-labels:Object.keys(total),
-datasets:[{data:Object.values(total)}]
+/* ================= GRAFIK ================= */
+
+function renderCharts() {
+  let jenisTotal = {};
+  let ukuranTotal = { "500 ml": 0, "800 ml": 0, "1000 ml": 0 };
+
+  cache.forEach(t => {
+    if (t.customOrder) return;
+
+    t.items.forEach(i => {
+      jenisTotal[i.jenis] = (jenisTotal[i.jenis] || 0) + i.jumlah;
+      ukuranTotal[i.ukuran] += i.jumlah;
+    });
+  });
+
+  if (chartJenis) chartJenis.destroy();
+  chartJenis = new Chart(document.getElementById("chartJenis"), {
+    type: "pie",
+    data: {
+      labels: Object.keys(jenisTotal),
+      datasets: [{
+        data: Object.values(jenisTotal)
+      }]
+    }
+  });
+
+  if (chartUkuran) chartUkuran.destroy();
+  chartUkuran = new Chart(document.getElementById("chartUkuran"), {
+    type: "bar",
+    data: {
+      labels: Object.keys(ukuranTotal),
+      datasets: [{
+        label: "Total Terjual",
+        data: Object.values(ukuranTotal)
+      }]
+    }
+  });
 }
+function renderSummary(){
+
+let totalPemesan=0;
+let totalProduk=0;
+let ukuranTotal={"500 ml":0,"800 ml":0,"1000 ml":0};
+let jenisTotal={};
+
+cache.forEach(t=>{
+if(t.customOrder) return;
+
+totalPemesan++;
+
+t.items.forEach(i=>{
+totalProduk+=i.jumlah;
+ukuranTotal[i.ukuran]+=i.jumlah;
+jenisTotal[i.jenis]=(jenisTotal[i.jenis]||0)+i.jumlah;
 });
+});
+
+/* ===== GLOBAL SUMMARY ===== */
+summaryGlobal.innerHTML=`
+<div class="summary-box">Total Pemesan<br>${totalPemesan}</div>
+<div class="summary-box">Total Produk Terjual<br>${totalProduk}</div>
+<div class="summary-box">500 ml<br>${ukuranTotal["500 ml"]}</div>
+<div class="summary-box">800 ml<br>${ukuranTotal["800 ml"]}</div>
+<div class="summary-box">1000 ml<br>${ukuranTotal["1000 ml"]}</div>
+`;
+
+/* ===== PER JENIS ===== */
+summaryJenis.innerHTML="";
+Object.keys(jenisTotal).forEach(j=>{
+summaryJenis.innerHTML+=`
+<div class="jenis-box">
+<b>${j}</b><br>
+${jenisTotal[j]} pcs
+</div>
+`;
+});
+
 }
 
-window.exportExcel=()=>{
-const bulan=document.getElementById("bulan").value;
-let data=[["Nama","Tanggal","Jenis","Jumlah"]];
-cache.filter(t=>t.tanggalAntar.startsWith(bulan))
-.forEach(t=>{
-t.items.forEach(i=>{
-data.push([t.nama,t.tanggalAntar,i.jenis,i.jumlah]);
-});
-});
-const ws=XLSX.utils.aoa_to_sheet(data);
-const wb=XLSX.utils.book_new();
-XLSX.utils.book_append_sheet(wb,ws,"Laporan");
-XLSX.writeFile(wb,"laporan_"+bulan+".xlsx");
-}
+
+/* ================= TABEL KLASIFIKASI (FIX DP LOGIC) ================= */
+
+window.renderTable = function () {
+
+  const fUkuran = document.getElementById("filterUkuran").value;
+  const fJenis = document.getElementById("filterJenis").value;
+
+  tabelKlasifikasi.innerHTML = "";
+
+  cache.forEach(t => {
+
+    if (t.customOrder) return;
+
+    /* ==== HITUNG TOTAL TRANSAKSI DULU (SEMUA ITEM) ==== */
+    let totalTransaksi = 0;
+
+    t.items.forEach(i => {
+      let hargaSatuan = harga[i.ukuran]?.[i.jenis] || 0;
+      totalTransaksi += hargaSatuan * i.jumlah;
+    });
+
+    let dp = t.nominalDP || 0;
+    let sisaTransaksi = totalTransaksi - dp;
+
+    let status = sisaTransaksi <= 0
+      ? `<span style="color:#2ecc71;font-weight:bold;">LUNAS</span>`
+      : `<span style="color:#e74c3c;font-weight:bold;">Kurang Rp ${sisaTransaksi.toLocaleString()}</span>`;
+
+    /* ==== LOOP UNTUK TAMPILKAN ITEM ==== */
+    t.items.forEach(i => {
+
+      if (fUkuran && i.ukuran !== fUkuran) return;
+      if (fJenis && i.jenis !== fJenis) return;
+
+      let hargaSatuan = harga[i.ukuran]?.[i.jenis] || 0;
+      let totalItem = hargaSatuan * i.jumlah;
+
+      tabelKlasifikasi.innerHTML += `
+        <tr>
+          <td>${t.nama}</td>
+          <td>${i.jenis}</td>
+          <td>${i.ukuran}</td>
+          <td>${i.jumlah}</td>
+          <td>Rp ${hargaSatuan.toLocaleString()}</td>
+          <td>Rp ${totalItem.toLocaleString()}</td>
+          <td>Rp ${dp.toLocaleString()}</td>
+          <td>Rp ${sisaTransaksi > 0 ? sisaTransaksi.toLocaleString() : 0}</td>
+          <td>${status}</td>
+        </tr>
+      `;
+    });
+
+  });
+};
+
+/* ================= EXPORT EXCEL ================= */
+
+window.exportExcel = function () {
+  let wb = XLSX.utils.table_to_book(document.getElementById("tabelData"));
+  XLSX.writeFile(wb, "laporan_pesanan.xlsx");
+};
 </script>
+
 
 </body>
 </html>
