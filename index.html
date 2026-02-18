@@ -289,11 +289,62 @@ pointer-events:none;
   left:-25px;
   top:10px;
 }
+#lockScreen{
+  position: fixed;
+  width:100%;
+  height:100vh;
+  background: radial-gradient(circle, #0b001a, black);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:99999;
+}
+
+.lock-box{
+  background: rgba(20,0,40,0.9);
+  padding:40px;
+  border-radius:20px;
+  text-align:center;
+  color:white;
+  box-shadow:0 0 30px pink;
+}
+
+.lock-box input{
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  margin-top:10px;
+  text-align:center;
+}
+
+.lock-box button{
+  margin-top:15px;
+  padding:8px 20px;
+  border:none;
+  border-radius:10px;
+  background:pink;
+  cursor:pointer;
+}
+
+#errorText{
+  color:#ff6b6b;
+  margin-top:10px;
+}
 
 </style>
 </head>
 
 <body>
+  <div id="lockScreen">
+  <div class="lock-box">
+    <h2>🔐 Private Galaxy</h2>
+    <p>Masukkan tanggal spesial kita 💖</p>
+    <input type="password" id="passwordInput" placeholder="DDMMYYYY">
+    <button onclick="checkPassword()">Masuk</button>
+    <p id="errorText"></p>
+  </div>
+</div>
+
  <div id="welcomeOverlay">
   <canvas id="galaxyCanvas"></canvas>
   <canvas id="effectsCanvas"></canvas>
@@ -770,6 +821,18 @@ function createGalaxy(){
       size:Math.random()*2,
       opacity:Math.random()
     });
+  }
+}
+
+window.checkPassword = function(){
+  const correct = "010623"; // ganti sesuai tanggal
+  const input = document.getElementById("passwordInput").value;
+
+  if(input === correct){
+    document.getElementById("lockScreen").style.display = "none";
+  } else {
+    document.getElementById("errorText").innerText =
+      "Heh salah sayang 😝 coba inget lagi tanggal jadian kita 💕";
   }
 }
 
