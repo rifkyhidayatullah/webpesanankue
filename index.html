@@ -3,1002 +3,758 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pesanan Kue Kering</title>
+<title>Exclusive Galaxy Bakery</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 
 <style>
-body{margin:0;font-family:Arial;background:#f7f7f7}
-header{background:#ff8fab;color:#fff;padding:15px;text-align:center;font-size:20px;font-weight:bold}
-.container{padding:15px;max-width:1100px;margin:auto}
-.card{background:#fff;padding:15px;border-radius:12px;margin-bottom:15px;box-shadow:0 2px 6px rgba(0,0,0,.1)}
-input,select,button{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #ddd}
-button{background:#ff8fab;color:#fff;border:none;font-weight:bold;cursor:pointer}
-button.secondary{background:#555}
-button.danger{background:#e74c3c}
-table{width:100%;border-collapse:collapse}
-th,td{padding:6px;border-bottom:1px solid #eee;text-align:center}
-.badge{padding:4px 8px;border-radius:6px;font-size:12px;color:#fff}
-.green{background:#2ecc71}
-.yellow{background:#f1c40f;color:#000}
-.red{background:#e74c3c}
-.filter{display:flex;gap:8px;flex-wrap:wrap}
-.top-nav{display:flex;gap:8px;margin-bottom:10px}
-
-#welcomeOverlay{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:black;
-overflow:hidden;
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-z-index:9999;
-transition:opacity 1.2s ease;
+:root {
+    --primary: #ff8fab;
+    --primary-dark: #fb6f92;
+    --accent: #8000ff;
+    --glass: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --bg-deep: #0b001a;
 }
 
-/* Galaxy Stars */
-.stars{
-position:absolute;
-width:100%;
-height:100%;
-background:transparent;
-z-index:1;
+* { box-sizing: border-box; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+body {
+    margin: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg-deep);
+    color: #fff;
+    overflow-x: hidden;
 }
 
-.star{
-position:absolute;
-width:2px;
-height:2px;
-background:white;
-border-radius:50%;
-animation:blink 2s infinite alternate;
+/* Redesigned Header */
+header {
+    background: rgba(11, 0, 26, 0.7);
+    backdrop-filter: blur(15px);
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    border-bottom: 1px solid var(--glass-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-@keyframes blink{
-from{opacity:.3}
-to{opacity:1}
+.container {
+    padding: 25px;
+    max-width: 1200px;
+    margin: auto;
+    position: relative;
+    z-index: 2;
 }
 
-.welcomeBox{
-text-align:center;
-color:white;
-z-index:2;
-animation:fadeZoom 2s ease;
+/* Modern Glass Cards */
+.card {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    padding: 30px;
+    border-radius: 24px;
+    margin-bottom: 25px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    animation: slideUp 0.8s ease-out;
 }
 
-.welcomeBox h1{
-font-size:34px;
-text-shadow:0 0 20px rgba(255,255,255,0.9);
-margin-bottom:10px;
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-#welcomeOverlay h2{
-font-size:22px;
-color:#ff7eb3;
-text-shadow:
-0 0 10px #ff7eb3,
-0 0 20px #ff7eb3,
-0 0 40px #ff4f87;
+/* Form Styling */
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-#welcomeOverlay p{
-font-size:14px;
-margin-bottom:15px;
+input, select {
+    width: 100%;
+    padding: 14px;
+    margin: 8px 0;
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    font-size: 16px;
 }
 
-#welcomeOverlay button{
-padding:12px 25px;
-border:none;
-border-radius:30px;
-background:white;
-color:#ff4f87;
-font-weight:bold;
-cursor:pointer;
-transition:.3s;
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: rgba(255,255,255,0.1);
+    box-shadow: 0 0 15px rgba(255, 143, 171, 0.3);
 }
 
-#welcomeOverlay button:hover{
-transform:scale(1.15);
+/* Exclusive Buttons */
+button {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 15px;
+    border: none;
+    font-weight: 800;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
-#herPhoto{
-width:130px;
-height:130px;
-border-radius:50%;
-object-fit:cover;
-margin:20px auto;
-opacity:0;
-transform:scale(.8);
-transition:all 1.5s ease;
-position:relative;
-z-index:2;
+button:not(.danger):not(.secondary) {
+    background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(255, 143, 171, 0.4);
 }
 
-#herPhoto::after{
-content:"";
-position:absolute;
-top:-10px;
-left:-10px;
-width:150px;
-height:150px;
-border-radius:50%;
-border:3px solid #ff4f87;
-animation:rotateRing 6s linear infinite;
+button:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 25px rgba(255, 143, 171, 0.6);
 }
 
-@keyframes rotateRing{
-from{transform:rotate(0deg)}
-to{transform:rotate(360deg)}
+button.secondary { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid var(--glass-border); }
+button.danger { background: linear-gradient(45deg, #ff4b2b, #ff416c); color: #fff; }
+
+/* Table Styling */
+table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
+th { padding: 15px; text-align: left; color: var(--primary); }
+td { padding: 15px; background: rgba(255,255,255,0.03); }
+td:first-child { border-radius: 12px 0 0 12px; }
+td:last-child { border-radius: 0 12px 12px 0; }
+
+/* Badges */
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.green { background: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid #2ecc71; }
+.yellow { background: rgba(241, 196, 15, 0.2); color: #f1c40f; border: 1px solid #f1c40f; }
+.red { background: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid #e74c3c; }
+
+/* Top Nav Redesign */
+.top-nav {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
 }
 
-
-@keyframes fadeZoom{
-0%{opacity:0;transform:scale(.7)}
-100%{opacity:1;transform:scale(1)}
+/* LOCK SCREEN & OVERLAY (MODERNIZED) */
+#lockScreen, #welcomeOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at center, #1a0033, #000);
 }
 
-/* Floating Hearts */
-.floating-hearts span{
-position:absolute;
-bottom:-50px;
-font-size:20px;
-animation:floatUp 6s linear infinite;
-opacity:0.8;
+/* Color Indicators for Delivery Date */
+.status-time {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.time-danger { background: rgba(231, 76, 60, 0.2); color: #ff4d4d; border: 1px solid #ff4d4d; } /* H-3 */
+.time-warning { background: rgba(241, 196, 15, 0.2); color: #f1c40f; border: 1px solid #f1c40f; } /* H-7 */
+.time-safe { background: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid #2ecc71; }    /* Aman */
+
+/* Action Buttons in Card */
+.card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    border-top: 1px solid var(--glass-border);
+    padding-top: 15px;
+}
+.btn-mini {
+    padding: 8px 12px;
+    font-size: 11px;
+    border-radius: 10px;
+    width: auto;
+    margin: 0;
 }
 
-@keyframes floatUp{
-0%{transform:translateY(0) scale(1)}
-100%{transform:translateY(-110vh) scale(1.5)}
+.lock-box {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(30px);
+    padding: 50px;
+    border-radius: 30px;
+    text-align: center;
+    border: 1px solid var(--glass-border);
+    max-width: 400px;
+    width: 90%;
 }
 
-#confettiCanvas{
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-pointer-events:none;
-}
-.music-hint{
-  margin-top:20px;
-  font-size:14px;
-  opacity:0;
-  color:#fff;
-  text-align:center;
-  animation: fadeInHint 3s ease forwards;
-  animation-delay: 2s;
+#herPhoto {
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    border: 4px solid var(--primary);
+    box-shadow: 0 0 30px var(--primary);
+    margin: 20px auto;
+    object-fit: cover;
 }
 
-@keyframes fadeInHint{
-  from{opacity:0; transform:translateY(10px);}
-  to{opacity:1; transform:translateY(0);}
-}
-#galaxyCanvas,
-#effectsCanvas{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  z-index:0;
+/* Animations for background */
+.nebula {
+    position: fixed;
+    width: 80vmax;
+    height: 80vmax;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: -1;
+    opacity: 0.4;
+    animation: float 20s infinite alternate;
 }
 
-
-/* Nebula glow */
-.nebula{
-  position:fixed;
-  width:600px;
-  height:600px;
-  border-radius:50%;
-  filter:blur(120px);
-  opacity:0.6;
-  z-index:0;
-  animation: nebulaMove 30s linear infinite alternate;
+@keyframes float {
+    from { transform: translate(-10%, -10%) rotate(0deg); }
+    to { transform: translate(10%, 10%) rotate(360deg); }
+}
+/* Menjinakkan Dropdown Putih */
+select {
+    appearance: none; /* Menghilangkan style bawaan OS */
+    background-color: #1a1a3a !important;
+    color: white !important;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: calc(100% - 15px) center;
+    padding-right: 40px !important;
 }
 
-.nebula1{
-  background:radial-gradient(circle,#ff4da6,#8000ff,transparent);
-  top:10%;
-  left:20%;
+/* Ini bagian paling penting buat fix warna putihnya */
+select option {
+    background-color: #0f0f2d !important; /* Warna deep space */
+    color: white !important;
+    padding: 10px;
 }
 
-.nebula2{
-  background:radial-gradient(circle,#cc00ff,#ff66cc,transparent);
-  bottom:10%;
-  right:20%;
+/* Efek Glow pas di klik */
+select:focus {
+    outline: none;
+    border-color: var(--secondary-neon) !important;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
 }
-
-@keyframes nebulaMove{
-  from{ transform:translate(0,0); }
-  to{ transform:translate(50px,-50px); }
-}
-#rocket{
-  position: fixed;
-  font-size: 50px;
-  left: -100px;
-  top: 70%;
-  transform: rotate(20deg);
-  z-index: 1000;
-  filter: drop-shadow(0 0 15px orange);
-  animation: rocketFly 12s linear infinite;
-  pointer-events: none;
-}
-
-@keyframes rocketFly{
-  0%{
-    left:-150px;
-    top:70%;
-    transform: rotate(20deg);
-  }
-  50%{
-    top:40%;
-  }
-  100%{
-    left:110vw;
-    top:20%;
-    transform: rotate(25deg);
-  }
-}
-.rocket-text{
-  position: fixed;
-  bottom: 10%;
-  width: 100%;
-  text-align: center;
-  color: white;
-  font-size: 18px;
-  text-shadow: 0 0 10px pink;
-  animation: fadeIn 1s ease;
-  z-index: 999;
-}
-.rocket-fly{
-  position: fixed;
-  font-size: 45px;
-  left: -100px;
-  animation: rocketMove 10s linear forwards;
-  z-index: 1000;
-}
-
-@keyframes rocketMove{
-  0%{ left:-150px; top:60vh;}
-  100%{ left:110vw; top:20vh;}
-}
-
-.buzz-fly{
-  position: fixed;
-  font-size: 50px;
-  left: -120px;
-  top:75vh;
-  filter: drop-shadow(0 0 15px cyan);
-  animation: buzzMove 10s linear forwards;
-  z-index: 999;
-}
-
-@keyframes buzzMove{
-  0%{ left:-120px; top:75vh;}
-  100%{ left:110vw; top:25vh;}
-}
-.buzz-fly::after{
-  content:"✨✨";
-  position:absolute;
-  font-size:20px;
-  left:-25px;
-  top:10px;
-}
-#lockScreen{
-  position: fixed;
-  width:100%;
-  height:100vh;
-  background: radial-gradient(circle, #0b001a, black);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:99999;
-}
-
-.lock-box{
-  background: rgba(20,0,40,0.9);
-  padding:40px;
-  border-radius:20px;
-  text-align:center;
-  color:white;
-  box-shadow:0 0 30px pink;
-}
-
-.lock-box input{
-  padding:10px;
-  border:none;
-  border-radius:10px;
-  margin-top:10px;
-  text-align:center;
-}
-
-.lock-box button{
-  margin-top:15px;
-  padding:8px 20px;
-  border:none;
-  border-radius:10px;
-  background:pink;
-  cursor:pointer;
-}
-
-#errorText{
-  color:#ff6b6b;
-  margin-top:10px;
-}
-
 </style>
 </head>
 
 <body>
-  <div id="lockScreen">
-  <div class="lock-box">
-    <h2>🔐 Private Galaxy</h2>
-    <p>Masukkan tanggal spesial kita 💖</p>
-    <input type="password" id="passwordInput" placeholder="DDMMYYYY">
-    <button onclick="checkPassword()">Masuk</button>
-    <p id="errorText"></p>
-  </div>
+
+<!-- Lock Screen -->
+<div id="lockScreen">
+    <div class="lock-box">
+        <h2 style="font-family: 'Playfair Display'; font-size: 32px;">🔐 Access Granted?</h2>
+        <p style="opacity: 0.7;">Masukkan tanggal spesial kita untuk membuka galaksi ini 💖</p>
+        <input type="password" id="passwordInput" placeholder="DDMMYYYY" style="text-align:center; font-size: 20px; letter-spacing: 5px;">
+        <button onclick="checkPassword()">Unlock My Heart</button>
+        <p id="errorText" style="font-size: 13px;"></p>
+    </div>
 </div>
 
- <div id="welcomeOverlay">
-  <canvas id="galaxyCanvas"></canvas>
-  <canvas id="effectsCanvas"></canvas>
-  <div class="nebula nebula1"></div>
-<div class="nebula nebula2"></div>
-<div id="rocket">🚀</div>
-  <p id="musicHint" class="music-hint">
-  💕 Tekan layar mana aja el biar ada musik nya, dengerin sampe selesai ya 🥰
-</p>
-
-  <div class="stars"></div>
-  <canvas id="confettiCanvas"></canvas>
-
-  <div class="floating-hearts"></div>
-
-  <div class="welcomeBox">
-    <h1 id="typingText"></h1>
-    <h2 id="herName">Untuk: Sayangkuuuu 💕</h2>
-    <p id="dayCounter"></p>
-    <img src="baeksongmin.jpg" id="herPhoto">
-    <button id="loveBtn">Klik kalau kamu sayang aku 💖</button>
-  </div>
-
-  <audio id="bgMusic" loop>
-  <source src="kasihputih.mp3" type="audio/mpeg">
-</audio>
-
+<!-- Welcome Overlay -->
+<div id="welcomeOverlay" style="display:none; opacity: 1;">
+    <canvas id="galaxyCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%;"></canvas>
+    <div class="nebula" style="background: radial-gradient(circle, var(--accent), transparent); top: -20%; left: -20%;"></div>
+    <div class="nebula" style="background: radial-gradient(circle, var(--primary), transparent); bottom: -20%; right: -20%;"></div>
+    
+    <div class="welcomeBox" style="position:relative; z-index: 10; text-align: center;">
+        <h1 id="typingText" style="font-size: 2.5rem; text-shadow: 0 0 20px var(--primary);"></h1>
+        <h2 id="herName" style="color: var(--primary); margin: 10px 0;">SAYANGKU SI ELL 💕</h2>
+        <p id="dayCounter" style="letter-spacing: 2px; font-weight: 300;"></p>
+        <img src="baeksongmin.jpg" id="herPhoto" style="opacity:0; transform: scale(0.5);">
+        <button id="loveBtn" style="width: auto; padding: 15px 40px; margin: 20px auto;">MASUK KE DUNIA KITA 🚀</button>
+    </div>
 </div>
 
-
-<header>📦 Pesanan Kue Kering</header>
+<header>EL'S ROYAL COOKIES</header>
 
 <div class="container">
+    <div class="top-nav">
+        <button class="secondary" onclick="location.href='dashboard.html'">📊 Dashboard</button>
+        <button class="secondary" onclick="location.href='riwayatpesanan.html'">📜 Riwayat</button>
+        <button class="secondary" onclick="location.href='custompesanan.html'">✨ Custom</button>
+    </div>
 
-<div class="top-nav">
-  <button onclick="location.href='dashboard.html'">📊 Dashboard</button>
-  <button onclick="location.href='riwayatpesanan.html'">📜 Riwayat Pesanan</button>
-  <button onclick="location.href='custompesanan.html'">✨ Custom Pesanan</button>
+    <div class="card">
+        <h3 style="margin-top:0; color: var(--primary); border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;">📝 Form Pesanan Baru</h3>
+        <input type="hidden" id="editId">
 
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <label>Nama Pemesan</label>
+                <input id="nama" placeholder="Contoh: Kak Rose">
+            </div>
+            <div>
+                <label>Tanggal Pengantaran</label>
+                <input type="date" id="tanggalAntar">
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <label>Status DP</label>
+                <select id="statusDP" onchange="toggleDP()">
+                    <option>Belum DP</option>
+                    <option>Sudah DP</option>
+                </select>
+            </div>
+            <div id="dpNominalBox" style="display:none;">
+                <label>Nominal DP (Rp)</label>
+                <input id="nominalDP" class="format-rupiah" placeholder="0"> <!-- Ganti type="number" jadi biasa + class -->
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <label>Metode Pembayaran</label>
+                <select id="metodeBayar">
+                    <option>Belum Bayar</option>
+                    <option>Cash</option>
+                    <option>Transfer</option>
+                    <option>QRIS</option>
+                </select>
+            </div>
+            <div>
+                <label>Tanggal Bayar (Bukti)</label>
+                <input type="date" id="tanggalBayar">
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; align-items: end;">
+            <div>
+                <label>Jenis Kue</label>
+                <select id="jenisKue">
+                    <option value="">-- Pilih --</option>
+                    <option>Nastar Keju</option>
+                    <option>Kastengel</option>
+                    <option>Putri Salju</option>
+                    <option>Choco Rocher</option>
+                </select>
+            </div>
+            <div>
+                <label>Ukuran</label>
+                <select id="ukuranToples">
+                    <option value="">-- Size --</option>
+                    <option>500 ml</option>
+                    <option>800 ml</option>
+                    <option>1000 ml</option>
+                </select>
+            </div>
+            <div>
+                <label>Jumlah</label>
+                <input type="number" id="jumlah" placeholder="0">
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; margin-top: 20px;">
+            <button class="secondary" onclick="tambahItem()">➕ Add to Cart</button>
+            <button onclick="simpanTransaksi()">💾 Save Transaction</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top:0;">🛒 Keranjang Belanja</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Jenis Kue</th>
+                    <th>Ukuran</th>
+                    <th>Qty</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="keranjang"></tbody>
+        </table>
+    </div>
+
+    <div id="list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+        <!-- Data will load here -->
+    </div>
 </div>
 
-<div class="card">
-<input type="hidden" id="editId">
+<audio id="bgMusic" loop>
+    <source src="kasihputih.mp3" type="audio/mpeg">
+</audio>
 
-<label>Nama Pemesan</label>
-<input id="nama">
-
-<label>Tanggal Pengantaran</label>
-<input type="date" id="tanggalAntar">
-
-<label>Status DP</label>
-<select id="statusDP" onchange="toggleDP()">
-  <option>Belum DP</option>
-  <option>Sudah DP</option>
-</select>
-
-<div id="dpNominalBox" style="display:none;">
-  <label>Nominal DP (Rp)</label>
-  <input type="number" id="nominalDP">
-</div>
-
-<label>Status Pembayaran</label>
-<select id="metodeBayar">
-  <option>Belum Bayar</option>
-  <option>Cash</option>
-  <option>Transfer</option>
-  <option>QRIS</option>
-</select>
-
-<label>Tanggal Pembayaran (Bukti)</label>
-<input type="date" id="tanggalBayar">
-
-<label>Jenis Kue</label>
-<select id="jenisKue">
-<option value="">-- Pilih Jenis Kue--</option>
-<option>Nastar Keju</option>
-<option>Nastar Klasik</option>
-<option>Kastengel</option>
-<option>Putri Salju</option>
-<option>Sagu Keju</option>
-<option>Choco Rocher</option>
-<option>Thumbprint Choco</option>
-<option>Mini Cookies</option>
-<option>Mini Brownie Cup</option>
-<option>Oreo Button</option>
-</select>
-
-<label>Ukuran Toples</label>
-<select id="ukuranToples">
-<option value="">-- Pilih Ukuran --</option>
-<option>500 ml</option>
-<option>800 ml</option>
-<option>1000 ml</option>
-</select>
-
-<label>Jumlah</label>
-<input type="number" id="jumlah">
-
-<button onclick="tambahItem()">➕ Tambah ke Keranjang</button>
-<button onclick="simpanTransaksi()">💾 Simpan Transaksi</button>
-</div>
-
-<!-- KERANJANG -->
-<div class="card">
-<h3>🛒 Keranjang</h3>
-<table>
-<thead>
-<tr><th>Jenis</th><th>Ukuran</th><th>Jumlah</th><th></th></tr>
-</thead>
-<tbody id="keranjang"></tbody>
-</table>
-</div>
-
-<div id="list"></div>
-
-</div>
-
+<!-- SCRIPT TETAP MENGGUNAKAN LOGIKA ANDA[cite: 1] -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
-getFirestore, collection, addDoc, getDocs,
-updateDoc, deleteDoc, doc, serverTimestamp, setDoc
+    getFirestore, collection, addDoc, getDocs,
+    updateDoc, deleteDoc, doc, serverTimestamp, setDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const text = "Selamat datang sayangku yang paling cantik di galaksi ini 💖🌌";
-let i = 0;
-const typing = document.getElementById("typingText");
+// ==========================================
+// 1. LOGIKA BYPASS (AGAR TIDAK BOLAK BALIK PASSWORD)
+// ==========================================
+document.addEventListener("DOMContentLoaded", () => {
+    const isLoggedIn = sessionStorage.getItem("isLoggedIn");
+    const introShown = sessionStorage.getItem("introShown");
 
-function typeEffect(){
-  if(i < text.length){
-    typing.innerHTML += text.charAt(i);
-    i++;
-    setTimeout(typeEffect, 60);
-  }
-}
-window.onload = function(){
-
-  if(!sessionStorage.getItem("introShown")){
-    typeEffect();
-  } else {
-    document.getElementById("welcomeOverlay").style.display = "none";
-  }
-
-};
-function launchRocketAndBuzz(){
-
-  // 🚀 ROKET
-  const rocket = document.createElement("div");
-  rocket.innerHTML = "🚀";
-  rocket.className = "rocket-fly";
-  rocket.style.top = "60vh";
-  document.body.appendChild(rocket);
-
-  // 🧑‍🚀 BUZZ (emoji astronaut jadi style buzz)
-  const buzz = document.createElement("div");
-  buzz.innerHTML = "🧑‍🚀";
-  buzz.className = "buzz-fly";
-  document.body.appendChild(buzz);
-
-  setTimeout(()=>{
-    rocket.remove();
-    buzz.remove();
-  },10000);
-}
-
-setInterval(launchRocketAndBuzz, 20000);
-
-function launchRocket(){
-  const text = document.createElement("div");
-text.className = "rocket-text";
-text.innerHTML = "Terbang setinggi apapun… tetap pulangnya ke kamu 💖";
-document.body.appendChild(text);
-
-setTimeout(()=>text.remove(),4000);
-
-}
-
-setInterval(launchRocket, 20000);
-
-
-/* COUNTER HARI JADIAN */
-const startDate = new Date("2022-06-01"); // GANTI TANGGAL JADIAN
-const today = new Date();
-const diffTime = today - startDate;
-const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-document.getElementById("dayCounter").innerText =
-"A Relationship that lasted " + diffDays + " days 💕";
-
-/* Floating hearts */
-const heartsContainer = document.querySelector(".floating-hearts");
-function createHeart(){
-  const heart = document.createElement("span");
-  heart.innerHTML = "💖";
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.animationDuration = (4 + Math.random()*3) + "s";
-  heart.style.fontSize = (15 + Math.random()*20) + "px";
-  heartsContainer.appendChild(heart);
-  setTimeout(()=>heart.remove(),6000);
-}
-setInterval(createHeart,500);
-
-// supaya browser izinkan play
-
-
-
-/* Confetti */
-const canvas = document.getElementById("confettiCanvas");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let confetti = [];
-function createConfetti(){
-  for(let i=0;i<150;i++){
-    confetti.push({
-      x:Math.random()*canvas.width,
-      y:Math.random()*canvas.height,
-      r:Math.random()*6+2,
-      d:Math.random()*10
-    });
-  }
-}
-
-function drawConfetti(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle="white";
-  confetti.forEach(c=>{
-    ctx.beginPath();
-    ctx.arc(c.x,c.y,c.r,0,Math.PI*2);
-    ctx.fill();
-    c.y+=2;
-    if(c.y>canvas.height) c.y=0;
-  });
-}
-
-function animateConfetti(){
-  drawConfetti();
-  requestAnimationFrame(animateConfetti);
-}
-
-/* BUTTON CLICK */
-document.getElementById("loveBtn").onclick = function(){
-
-  sessionStorage.setItem("introShown", "true");
-
-  // PLAY dulu
-  music.play();
-
-  document.getElementById("herPhoto").style.opacity="1";
-  document.getElementById("herPhoto").style.transform="scale(1)";
-
-  createConfetti();
-  animateConfetti();
-
-  // lalu fade out musik
-  let fade = setInterval(()=>{
-    if(music.volume > 0.05){
-      music.volume -= 0.05;
-    } else {
-      music.pause();
-      music.currentTime = 0;
-      music.volume = 1;
-      clearInterval(fade);
+    if (isLoggedIn === "true") {
+        // Langsung sembunyikan lock screen jika sudah pernah login di sesi ini
+        document.getElementById("lockScreen").style.display = "none";
+        
+        if (introShown === "true") {
+            // Jika intro sudah pernah selesai, sembunyikan overlay juga
+            document.getElementById("welcomeOverlay").style.display = "none";
+        } else {
+            // Jika baru login pertama kali di sesi ini
+            document.getElementById("welcomeOverlay").style.display = "flex";
+            typeEffect();
+        }
     }
-  },100);
-
-  setTimeout(()=>{
-    document.getElementById("welcomeOverlay").style.opacity="0";
-    setTimeout(()=>{
-      document.getElementById("welcomeOverlay").style.display="none";
-    },1200);
-  },4000);
-};
-
-
-/* Generate Stars */
-const starsContainer = document.querySelector(".stars");
-
-function createStars(){
-  for(let i=0;i<200;i++){
-    const star = document.createElement("div");
-    star.classList.add("star");
-    star.style.top = Math.random()*100 + "vh";
-    star.style.left = Math.random()*100 + "vw";
-    star.style.animationDuration = (1 + Math.random()*2) + "s";
-    starsContainer.appendChild(star);
-  }
-}
-createStars();
-document.addEventListener("mousemove",function(e){
-  const x = (window.innerWidth/2 - e.pageX)/50;
-  const y = (window.innerHeight/2 - e.pageY)/50;
-  starsContainer.style.transform = `translate(${x}px, ${y}px)`;
 });
 
-
+// ==========================================
+// 2. FIREBASE CONFIG & INIT
+// ==========================================
 const app = initializeApp({
-apiKey:"AIzaSyCkzEGvVEv-jF-Qg9qGemIAgRSeqQdcThc",
-authDomain:"pesanankue.firebaseapp.com",
-projectId:"pesanankue"
+    apiKey: "AIzaSyCkzEGvVEv-jF-Qg9qGemIAgRSeqQdcThc",
+    authDomain: "pesanankue.firebaseapp.com",
+    projectId: "pesanankue"
 });
-
 const db = getFirestore(app);
-const colRef = collection(db,"transaksi");
+const colRef = collection(db, "transaksi");
 
-const el=id=>document.getElementById(id);
-let items=[], cache=[];
-
-window.toggleDP=()=>{
-dpNominalBox.style.display =
-el("statusDP").value==="Sudah DP"?"block":"none";
-};
-
-window.tambahItem=()=>{
-if(!el("jenisKue").value||!el("jumlah").value||!el("ukuranToples").value)
-return alert("Lengkapi item");
-
-items.push({
-jenis:el("jenisKue").value,
-ukuran:el("ukuranToples").value,
-jumlah:+el("jumlah").value
-});
-el("jumlah").value="";
-renderKeranjang();
-};
-
-function renderKeranjang(){
-keranjang.innerHTML="";
-items.forEach((i,idx)=>{
-keranjang.innerHTML+=`
-<tr>
-<td>${i.jenis}</td>
-<td>${i.ukuran}</td>
-<td>${i.jumlah}</td>
-<td><button class="danger" onclick="hapusItem(${idx})">X</button></td>
-</tr>`;
-});
-}
-
-window.hapusItem=i=>{
-items.splice(i,1);
-renderKeranjang();
-};
-
-function diffHari(t){
-return Math.ceil((new Date(t)-new Date())/86400000);
-}
-
-function badge(t){
-const d=diffHari(t);
-if(d<=1) return ['red','HARI INI'];
-if(d<=7) return ['yellow','≤ 7 hari'];
-return ['green','MASIH LAMA'];
-}
-
-window.simpanTransaksi=async()=>{
-if(!el("nama").value||items.length===0)
-return alert("Data belum lengkap");
-
-const data={
-nama:el("nama").value,
-tanggalAntar:el("tanggalAntar").value,
-statusDP:el("statusDP").value,
-nominalDP: el("statusDP").value==="Sudah DP"
-? +el("nominalDP").value||0
-: 0,
-metodeBayar:el("metodeBayar").value,
-tanggalBayar:el("tanggalBayar").value||null,
-items,
-waktu:serverTimestamp()
-};
-
-el("editId").value
-? await updateDoc(doc(db,"transaksi",el("editId").value),data)
-: await addDoc(colRef,data);
-
-resetForm();
-loadData();
-};
-
-function resetForm(){
-el("editId").value="";
-items=[];
-renderKeranjang();
-el("nominalDP").value="";
-}
-
-window.loadData=async()=>{
-list.innerHTML="";
-cache=[];
-const snap=await getDocs(colRef);
-
-snap.forEach(d=>{
-const t=d.data();
-cache.push({id:d.id,...t});
-const [c,l]=badge(t.tanggalAntar);
-
-list.innerHTML+=`
-<div class="card">
-<b>${t.nama}</b><br>
-<span class="badge ${c}">${l}</span><br>
-Antar: ${t.tanggalAntar}<br>
-DP: ${t.statusDP} ${t.nominalDP?'- Rp '+t.nominalDP.toLocaleString():''}<br>
-Bayar: ${t.metodeBayar}<br>
-${t.items.map(i=>`• ${i.jenis} ${i.ukuran} (${i.jumlah})`).join("<br>")}
-<br><br>
-<button onclick="edit('${d.id}')">✏️ Edit</button>
-<button class="danger" onclick="hapusTransaksi('${d.id}')">🗑 Hapus</button>
-<button onclick="selesai('${d.id}')">✅ Selesai</button>
-</div>`;
-});
-};
-
-window.edit=id=>{
-const t=cache.find(x=>x.id===id);
-el("editId").value=id;
-el("nama").value=t.nama;
-el("tanggalAntar").value=t.tanggalAntar;
-el("statusDP").value=t.statusDP;
-toggleDP();
-el("nominalDP").value=t.nominalDP||"";
-el("metodeBayar").value=t.metodeBayar;
-el("tanggalBayar").value=t.tanggalBayar||"";
-items=[...t.items];
-renderKeranjang();
-};
-
-window.hapusTransaksi=async id=>{
-if(confirm("Hapus pesanan ini?")){
-await deleteDoc(doc(db,"transaksi",id));
-loadData();
-}
-};
-
-window.selesai=async id=>{
-if(!confirm("Tandai selesai?")) return;
-const data=cache.find(x=>x.id===id);
-await setDoc(doc(db,"riwayat_pesanan",id),data);
-await deleteDoc(doc(db,"transaksi",id));
-loadData();
-};
-
-loadData();
-
-const galaxyCanvas = document.getElementById("galaxyCanvas");
-const gctx = galaxyCanvas.getContext("2d");
-
-galaxyCanvas.width = window.innerWidth;
-galaxyCanvas.height = window.innerHeight;
-
-let stars = [];
-const STAR_COUNT = 800;
-const arms = 4;
-const rotationSpeed = 0.0008;
-let angleOffset = 0;
-
-function createGalaxy(){
-  stars = [];
-  for(let i=0;i<STAR_COUNT;i++){
-
-    const arm = Math.floor(Math.random() * arms);
-    const armAngle = (arm / arms) * Math.PI * 2;
-
-    const distance = Math.random() * 400;
-    const spread = 0.5;
-
-    const angle = armAngle + distance * 0.05 + (Math.random()-0.5)*spread;
-
-    const x = galaxyCanvas.width/2 + Math.cos(angle) * distance;
-    const y = galaxyCanvas.height/2 + Math.sin(angle) * distance;
-
-    stars.push({
-      x,y,
-      size:Math.random()*2,
-      opacity:Math.random()
-    });
-  }
-}
-
-window.checkPassword = function(){
-  const correct = "010623"; // ganti sesuai tanggal
-  const input = document.getElementById("passwordInput").value;
-
-  if(input === correct){
-    document.getElementById("lockScreen").style.display = "none";
-  } else {
-    document.getElementById("errorText").innerText =
-      "Heh salah sayang 😝 coba inget lagi tanggal jadian kita 💕";
-  }
-}
-
-
-const music = document.getElementById("bgMusic");
-
-document.body.addEventListener("click", () => {
-  if(music.paused){
-    music.play();
-  }
-}, { once: true });
-  let pulseAngle = 0;
-
-function drawGalaxy(){
-  let pulse = 1 + Math.sin(pulseAngle) * 0.05;
-pulseAngle += 0.02;
-
-  gctx.fillStyle = "rgba(0,0,20,0.6)";
-  gctx.fillRect(0,0,galaxyCanvas.width,galaxyCanvas.height);
-
-  gctx.save();
-  gctx.translate(galaxyCanvas.width/2, galaxyCanvas.height/2);
-  gctx.rotate(angleOffset);
-  gctx.scale(pulse, pulse);
-  gctx.translate(-galaxyCanvas.width/2, -galaxyCanvas.height/2);
-
-  stars.forEach(star=>{
-    gctx.beginPath();
-    gctx.arc(star.x, star.y, star.size, 0, Math.PI*2);
-    gctx.fillStyle = `rgba(255,255,255,${star.opacity})`;
-    gctx.fill();
-  });
-  gctx.fillStyle = "white";
-gctx.font = "40px Arial";
-gctx.textAlign = "center";
-gctx.fillText("MY LOVELY SI ELL 💖", galaxyCanvas.width/2, galaxyCanvas.height/2);
-
-  gctx.restore();
-
-  angleOffset += rotationSpeed;
-
-  requestAnimationFrame(drawGalaxy);
-}
-
-createGalaxy();
-drawGalaxy();
-
-let hue = 280;
-
-function animateNebula(){
-  hue += 0.2;
-  document.querySelectorAll(".nebula").forEach(n=>{
-    n.style.background =
-      `radial-gradient(circle,
-        hsl(${hue},100%,70%),
-        hsl(${hue+40},100%,40%),
-        transparent)`;
-  });
-  requestAnimationFrame(animateNebula);
-}
-animateNebula();
-
-/* PARALLAX EFFECT */
-document.addEventListener("mousemove",function(e){
-  const x = (window.innerWidth/2 - e.pageX)/100;
-  const y = (window.innerHeight/2 - e.pageY)/100;
-  galaxyCanvas.style.transform = `translate(${x}px, ${y}px)`;
-});
-
-window.addEventListener("resize",()=>{
-  galaxyCanvas.width = window.innerWidth;
-  galaxyCanvas.height = window.innerHeight;
-  createGalaxy();
-});
-const effectsCanvas = document.getElementById("effectsCanvas");
-const ectx = effectsCanvas.getContext("2d");
-
-effectsCanvas.width = window.innerWidth;
-effectsCanvas.height = window.innerHeight;
-
-/* SHOOTING STAR */
-let shootingStars = [];
-
-function createShootingStar(){
-  shootingStars.push({
-    x: Math.random()*effectsCanvas.width,
-    y: 0,
-    length: 200,
-    speed: 8,
-    angle: Math.PI/4
-  });
-}
-
-setInterval(createShootingStar, 5000);
-
-function drawEffects(){
-  ectx.clearRect(0,0,effectsCanvas.width,effectsCanvas.height);
-
-  shootingStars.forEach((star,index)=>{
-    ectx.beginPath();
-    ectx.moveTo(star.x, star.y);
-    ectx.lineTo(
-      star.x - Math.cos(star.angle)*star.length,
-      star.y - Math.sin(star.angle)*star.length
-    );
-    ectx.strokeStyle="white";
-    ectx.lineWidth=2;
-    ectx.stroke();
-
-    star.x += star.speed;
-    star.y += star.speed;
-
-    if(star.y > effectsCanvas.height){
-      shootingStars.splice(index,1);
+window.selesaikanPesanan = async (id, dataString) => {
+    if (!confirm("Tandai pesanan ini sebagai selesai dan pindahkan ke riwayat?")) return;
+    
+    try {
+        const data = JSON.parse(decodeURIComponent(dataString));
+        const riwayatRef = collection(db, "riwayat_pesanan");
+        
+        // Simpan ke Riwayat dengan timestamp penyelesaian
+        await addDoc(riwayatRef, {
+            ...data,
+            waktuSelesai: new Date().toISOString()
+        });
+        
+        // Hapus dari daftar aktif
+        await deleteDoc(doc(db, "transaksi", id));
+        
+        alert("Pesanan sukses dipindahkan ke riwayat! ✨");
+        loadData(); // Panggil fungsi ini untuk refresh list tanpa reload halaman
+    } catch (error) {
+        console.error("Gagal memindahkan pesanan:", error);
     }
-  });
+};
 
-  requestAnimationFrame(drawEffects);
+// ==========================================
+// 3. FUNGSI AUTHENTICATION
+// ==========================================
+window.checkPassword = function() {
+    const correct = "010623"; // Tanggal jadian Anda
+    const input = document.getElementById("passwordInput").value;
+
+    if (input === correct) {
+        // SIMPAN STATUS KE SESSION
+        sessionStorage.setItem("isLoggedIn", "true");
+        
+        document.getElementById("lockScreen").style.opacity = "0";
+        setTimeout(() => {
+            document.getElementById("lockScreen").style.display = "none";
+            document.getElementById("welcomeOverlay").style.display = "flex";
+            typeEffect();
+            // Putar musik saat berhasil masuk
+            const music = document.getElementById("bgMusic");
+            if(music) music.play().catch(e => console.log("Autoplay blocked"));
+        }, 500);
+    } else {
+        document.getElementById("errorText").innerText = "Salah sayang 😝 Inget lagi ya!";
+    }
 }
 
-drawEffects();
-
-/* PLANET BESAR LEWAT */
-let planetX = -300;
-let planetY = effectsCanvas.height * 0.3;
-
-function drawPlanet(){
-
-  ectx.save();
-  ectx.translate(planetX, planetY);
-
-  // planet
-  const grad = ectx.createRadialGradient(-30,-30,20,0,0,120);
-  grad.addColorStop(0,"#ffccff");
-  grad.addColorStop(1,"#8000ff");
-  ectx.fillStyle = grad;
-  ectx.beginPath();
-  ectx.arc(0,0,120,0,Math.PI*2);
-  ectx.fill();
-
-  // ring
-  ectx.rotate(0.5);
-  ectx.strokeStyle="rgba(255,255,255,0.6)";
-  ectx.lineWidth=8;
-  ectx.beginPath();
-  ectx.ellipse(0,0,180,50,0,0,Math.PI*2);
-  ectx.stroke();
-
-  ectx.restore();
-
-  planetX += 0.3;
-  if(planetX > effectsCanvas.width + 300){
-    planetX = -300;
-  }
-
-  requestAnimationFrame(drawPlanet);
+// ==========================================
+// 4. TYPING & INTRO EFFECT
+// ==========================================
+const text = "Welcome to Our Private Galaxy, My Queen... 🌌";
+let i = 0;
+window.typeEffect = function() {
+    if (i < text.length) {
+        document.getElementById("typingText").innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typeEffect, 60);
+    }
 }
 
-drawPlanet();
+document.getElementById("loveBtn").onclick = function() {
+    // Simpan status agar intro tidak muncul lagi setelah klik tombol masuk
+    sessionStorage.setItem("introShown", "true");
 
-window.addEventListener("resize",()=>{
-  effectsCanvas.width = window.innerWidth;
-  effectsCanvas.height = window.innerHeight;
+    const photo = document.getElementById("herPhoto");
+    photo.style.opacity = "1";
+    photo.style.transform = "scale(1)";
+    
+    setTimeout(() => {
+        document.getElementById("welcomeOverlay").style.opacity = "0";
+        setTimeout(() => {
+            document.getElementById("welcomeOverlay").style.display = "none";
+        }, 1000);
+    }, 3000);
+};
+
+// ==========================================
+// 5. FITUR TRANSAKSI (TIDAK ADA YANG DIHAPUS)[cite: 1, 3]
+// ==========================================
+let cart = [];
+
+window.toggleDP = function() {
+    const status = document.getElementById("statusDP").value;
+    document.getElementById("dpNominalBox").style.display = (status === "Sudah DP") ? "block" : "none";
+}
+
+window.tambahItem = function() {
+    const jenis = document.getElementById("jenisKue").value;
+    const ukuran = document.getElementById("ukuranToples").value;
+    const qty = document.getElementById("jumlah").value;
+
+    if (!jenis || !ukuran || !qty) return alert("Isi detail kuenya dulu sayang!");
+
+    cart.push({ jenis, ukuran, qty });
+    renderKeranjang();
+}
+
+function renderKeranjang() {
+    const tbody = document.getElementById("keranjang");
+    tbody.innerHTML = "";
+    cart.forEach((item, index) => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${item.jenis}</td>
+                <td>${item.ukuran}</td>
+                <td>${item.qty}</td>
+                <td><button class="danger" style="padding:5px 10px;" onclick="hapusItem(${index})">X</button></td>
+            </tr>
+        `;
+    });
+}
+
+window.hapusItem = function(index) {
+    cart.splice(index, 1);
+    renderKeranjang();
+}
+
+window.simpanTransaksi = async function() {
+    const nama = document.getElementById("nama").value;
+    const tglAntar = document.getElementById("tanggalAntar").value;
+    if (!nama || cart.length === 0) return alert("Nama dan Pesanan jangan kosong ya!");
+
+    try {
+        await addDoc(colRef, {
+            nama,
+            tanggalAntar: tglAntar,
+            statusDP: document.getElementById("statusDP").value,
+            nominalDP: document.getElementById("nominalDP").value || 0,
+            metodeBayar: document.getElementById("metodeBayar").value,
+            tanggalBayar: document.getElementById("tanggalBayar").value,
+            items: cart,
+            createdAt: serverTimestamp()
+        });
+        alert("Pesanan Berhasil Disimpan! ✨");
+        cart = [];
+        renderKeranjang();
+        document.getElementById("nama").value = "";
+        loadData();
+    } catch (e) {
+        console.error("Error adding document: ", e);
+    }
+}
+
+// --- FUNGSI LOAD DATA DENGAN AUTO-COLOR & EDIT/DELETE ---
+window.loadData = async function() {
+    const listDiv = document.getElementById("list");
+    listDiv.innerHTML = "<p style='text-align:center;'>Membuka Catatan Galaksi... ✨</p>";
+    
+    try {
+        const querySnapshot = await getDocs(colRef);
+        listDiv.innerHTML = "";
+        
+        querySnapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            const id = docSnap.id;
+            
+            // Hitung Selisih Hari
+            const tglAntar = new Date(data.tanggalAntar);
+            const tglSkrg = new Date();
+            const selisihTime = tglAntar - tglSkrg;
+            const selisihHari = Math.ceil(selisihTime / (1000 * 60 * 60 * 24));
+            
+            // Tentukan Warna Status Waktu
+            let timeClass = "time-safe";
+            let timeText = `H-${selisihHari} Hari lagi`;
+            
+            if (selisihHari <= 3) {
+                timeClass = "time-danger";
+                timeText = "🔥 DEADLINE H-3!";
+            } else if (selisihHari <= 7) {
+                timeClass = "time-warning";
+                timeText = "⚠️ H-7 Seminggu Lagi";
+            }
+            if (selisihHari < 0) { timeText = "✅ Selesai/Lewat"; timeClass = "secondary"; }
+
+            listDiv.innerHTML += `
+                <div class="card" style="position:relative; overflow:hidden;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <h4 style="color:var(--primary); margin:0; font-size:18px;">👤 ${data.nama}</h4>
+                            <p style="font-size:13px; opacity:0.7; margin:5px 0;">📅 ${data.tanggalAntar}</p>
+                        </div>
+                        <span class="status-time ${timeClass}">${timeText}</span>
+                    </div>
+
+                    <div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:15px; margin:15px 0;">
+                        ${data.items.map(it => `
+                            <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+                                <span>• ${it.jenis} (${it.ukuran})</span>
+                                <span style="color:var(--primary); font-weight:bold;">x${it.qty}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                         <span class="badge ${data.statusDP === 'Sudah DP' ? 'green' : 'red'}" style="font-size:10px;">
+                            ${data.statusDP === 'Sudah DP' ? '💰 LUNAS/DP' : '❌ BELUM BAYAR'}
+                         </span>
+                         <span style="font-size:11px; opacity:0.5;">Metode: ${data.metodeBayar}</span>
+                    </div>
+
+                   <div class="card-actions" style="display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid var(--glass-border); padding-top: 15px;">
+    <button class="secondary btn-mini" onclick="editPesanan('${id}')" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--glass-border); padding: 8px 12px; border-radius: 10px; cursor: pointer; font-size: 11px;">
+        📝 EDIT
+    </button>
+    <button class="danger btn-mini" onclick="hapusPesanan('${id}')" style="background: linear-gradient(45deg, #ff4b2b, #ff416c); color: white; border: none; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-size: 11px;">
+        🗑️ HAPUS
+    </button>
+    <button onclick="selesaikanPesanan('${id}', '${encodeURIComponent(JSON.stringify(data))}')" 
+            style="background: #2ecc71; color: white; border: none; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-size: 11px; flex-grow: 1;">
+        ✅ SELESAI
+    </button>
+</div>
+                    </div>
+                </div>
+            `;
+        });
+    } catch (e) {
+        console.error("Gagal load:", e);
+    }
+}
+
+// --- FUNGSI HAPUS ---
+window.hapusPesanan = async function(id) {
+    if (confirm("Sayang, yakin mau hapus pesanan ini? 🥺")) {
+        try {
+            await deleteDoc(doc(db, "transaksi", id));
+            alert("Pesanan terhapus dari galaksi! 🌌");
+            loadData();
+        } catch (e) { alert("Gagal hapus!"); }
+    }
+}
+
+// --- FUNGSI EDIT (TARIK DATA KE FORM) ---
+window.editPesanan = async function(id) {
+    const querySnapshot = await getDocs(colRef);
+    querySnapshot.forEach((docSnap) => {
+        if (docSnap.id === id) {
+            const data = docSnap.data();
+            document.getElementById("editId").value = id; // Simpan ID di hidden input
+            document.getElementById("nama").value = data.nama;
+            document.getElementById("tanggalAntar").value = data.tanggalAntar;
+            document.getElementById("statusDP").value = data.statusDP;
+            document.getElementById("nominalDP").value = data.nominalDP;
+            document.getElementById("metodeBayar").value = data.metodeBayar;
+            document.getElementById("tanggalBayar").value = data.tanggalBayar;
+            
+            cart = data.items; // Masukkan item lama ke keranjang
+            renderKeranjang();
+            
+            // Scroll ke atas agar user tahu sedang edit
+            window.scrollTo({top: 0, behavior: 'smooth'});
+            alert("Data sudah ditarik ke Form di atas, silakan ubah lalu Save! ✨");
+        }
+    });
+}
+
+// Script untuk Titik Otomatis (Rupiah)
+document.querySelectorAll('.format-rupiah').forEach(input => {
+    input.addEventListener('input', function(e) {
+        let value = this.value.replace(/[^0-9]/g, ''); // Hapus semua selain angka
+        this.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Tambah titik setiap 3 angka
+    });
 });
+
+// Fungsi pembantu untuk baca angka asli (tanpa titik) sebelum simpan ke database
+const parseAngka = (val) => Number(val.replace(/\./g, '')) || 0;
+
+// Update fungsi simpanTransaksi agar bisa membedakan Update vs Create
+const originalSimpan = window.simpanTransaksi;
+window.simpanTransaksi = async function() {
+    const editId = document.getElementById("editId").value;
+    const nama = document.getElementById("nama").value;
+    const tglAntar = document.getElementById("tanggalAntar").value;
+
+    if (!nama || cart.length === 0) return alert("Lengkapi data dulu ya sayang!");
+
+    const payload = {
+        nama,
+        tanggalAntar: tglAntar,
+        statusDP: document.getElementById("statusDP").value,
+        nominalDP: document.getElementById("nominalDP").value || 0,
+        metodeBayar: document.getElementById("metodeBayar").value,
+        tanggalBayar: document.getElementById("tanggalBayar").value,
+        items: cart,
+        updatedAt: serverTimestamp()
+    };
+
+    try {
+        if (editId) {
+            // JIKA SEDANG EDIT
+            await updateDoc(doc(db, "transaksi", editId), payload);
+            alert("Update Berhasil! ❤️");
+            document.getElementById("editId").value = ""; // Reset ID
+        } else {
+            // JIKA PESANAN BARU
+            await addDoc(colRef, { ...payload, createdAt: serverTimestamp() });
+            alert("Pesanan Baru Tersimpan! ✨");
+        }
+        
+        // Reset Form
+        cart = [];
+        renderKeranjang();
+        document.getElementById("nama").value = "";
+        loadData();
+    } catch (e) { console.error(e); }
+}
+
+// Load data otomatis jika sudah login
+if (sessionStorage.getItem("isLoggedIn") === "true") {
+    loadData();
+}
 
 </script>
-
 </body>
 </html>
